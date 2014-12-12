@@ -189,15 +189,17 @@ public class PreProcesser {
             String current = tokens.nextToken();
             if (previous != null) {
                 if (isNotAWord(current)) {
-                    words.get(words.size() - 1).setEnd(CharToEnd.charToEnd(current.charAt(0)));
+                    words.get(words.size() - 1).setEnd(EndType.charToEnd(current.charAt(0)));
                     continue;
                 }
             }
             String copy = current;
             for (VocalRule wordRule : wordRules) {
                 current = wordRule.evaluate(previous, current);
-                words.add(new Word(copy, current, EndType.Space));
+
             }
+            words.add(new Word(copy, current, EndType.Space));
+            previous = current;
         }
         words.get(words.size() - 1).setEnd(EndType.EndOfData);
         Word[] result = new Word[words.size()];

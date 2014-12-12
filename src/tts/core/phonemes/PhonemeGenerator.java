@@ -89,6 +89,16 @@ public class PhonemeGenerator {
                 || isKasrah(Letter);
     }
 
+    private boolean isPunctuationMark(char letter) {
+        return (letter == ArabicMoves.QUESTION_MARK)
+                || (letter == ArabicMoves.EXLAMATION_MARK)
+                || (letter == ArabicMoves.DOT)
+                || (letter == ArabicMoves.COMMA)
+                || (letter == ArabicMoves.SAY_DOTS)
+                || (letter == ArabicMoves.SEMICOLON);
+
+    }
+
     /**
      * معالجة الأحرف الخاصة.
      *
@@ -160,7 +170,11 @@ public class PhonemeGenerator {
             }
             //معالجة الأحرف الخاصة
             handleSpecialLetters(res);
-
+            //معالجة نهاية الكلمة في حال كانت علامة ترقيم
+            char end = EndType.EndToChar(word.getEnd());
+            if (isPunctuationMark(end)) {
+                res.add((Phoneme) PhonemeDB.get(end).clone());
+            }
         }
 
         return words;
