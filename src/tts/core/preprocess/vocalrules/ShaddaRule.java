@@ -11,14 +11,14 @@ import tts.core.ArabicMoves;
  *
  *
  */
-public class ShaddaRule extends WordVocalRule {
+public class ShaddaRule extends VocalRule {
 
     public ShaddaRule() {
-        Priority = 2;
+        Priority = 3;
     }
 
     @Override
-    protected String evaluate(String previousWord, String currentWord) {
+    public String evaluate(String previousWord, String currentWord) {
         for (int j = 0; j < currentWord.length(); j++) {
             if (currentWord.charAt(j) == ArabicMoves.SHADDA) {
                 currentWord = currentWord.substring(0, j) + currentWord.charAt(j - 1) + currentWord.substring(j + 1);

@@ -11,14 +11,14 @@ import tts.core.ArabicMoves;
  *
  * @author ossama
  */
-public class AlefRule extends WordVocalRule {
+public class AlefRule extends VocalRule {
 
     public AlefRule() {
-        Priority = 7;
+        Priority = 10;
     }
 
     @Override
-    protected String evaluate(String previousWord, String currentWord) {
+    public String evaluate(String previousWord, String currentWord) {
         return currentWord.replaceAll("" + ArabicMoves.ALEF + "|"
                 + ArabicMoves.ALEF + ArabicMoves.FATHAH + "|"
                 + ArabicMoves.ALEF + ArabicMoves.DAMMAH + "|"

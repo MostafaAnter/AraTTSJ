@@ -8,13 +8,16 @@ package tts.core.phonemes;
 import tts.core.phonemes.types.Phoneme;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedList;
+import java.util.List;
 import java.util.Map;
 import java.util.Scanner;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import tts.core.ArabicMoves;
+import tts.core.phonemes.types.*;
 
 /**
  * هذا الصف مسؤول عن توليد المقاطع الصوتية المستخدمة من قبل نظام MBROLA.
@@ -94,7 +97,7 @@ public class PhonemeGenerator {
      *
      * @param phonemes قائمة المقاطع الصوتية التي ستتم معالجتها
      */
-    private void handleSpecialLetters(LinkedList<Phoneme> phonemes) {
+    private void handleSpecialLetters(List<Phoneme> phonemes) {
         for (int i = 0; i < phonemes.size(); i++) {
             //معالجة الحروف الخاصة
             if (i < phonemes.size() - 1 && isSpecialLetter(phonemes.get(i).getPhoneme())) {
@@ -118,7 +121,7 @@ public class PhonemeGenerator {
      * @param res قائمة المقاطع الصوتي
      * @return العنصر الذي سنعالجه تالياً
      */
-    private int handleFathah(int FathahIndex, String text, LinkedList<Phoneme> res) {
+    private int handleFathah(int FathahIndex, String text, List<Phoneme> res) {
         int k = 1;
         //عد الفتحات المتتالية
         while (k + FathahIndex < text.length() && isFathah(text.charAt(k + FathahIndex))) {
@@ -137,35 +140,30 @@ public class PhonemeGenerator {
      * @return قائمة المقاطع الصوتية التي ستمرر للنظام الخبير
      * @throws IllegalArgumentException في حال لم يوجد اللفظ الصوتي ضمن القاعدة
      */
-    public Phoneme[] generatePhoneme(String[] text) {
-        LinkedList<Phoneme> res = new LinkedList<>();
-        res.add((Phoneme) PhonemeDB.get(' ').clone());
-        for (String text1 : text) {
-            for (int j = 0; j < text1.length(); j++) {
-                if (PhonemeDB.containsKey(text1.charAt(j))) {
+    public Word[] generatePhoneme(Word[] words) {
+
+        for (Word word : words) {
+            ArrayList<Phoneme> res = word.getPhonemeList();
+            for (int j = 0; j < word.getVocal().length(); j++) {
+                if (PhonemeDB.containsKey(word.getVocal().charAt(j))) {
                     //دمج الفتحات المتتالية بفتحة واحدة زمنها هو مجموع أزمنة هذه الفتحات
-                    if (isFathah(text1.charAt(j))) {
-                        j = handleFathah(j, text1, res);
+                    if (isFathah(word.getVocal().charAt(j))) {
+                        j = handleFathah(j, word.getVocal(), res);
                     } else {
                         //قراءة الحروف و التحويل لمقاطع صوتية
-                        res.add((Phoneme) PhonemeDB.get(text1.charAt(j)).clone());
+                        res.add((Phoneme) PhonemeDB.get(word.getVocal().charAt(j)).clone());
                     }
                 } else {
                     //الحرف ليس ضمن المقاطع الصوتية
-                    throw new IllegalArgumentException("Unkown Phoneme: " + text1.charAt(j));
+                    throw new IllegalArgumentException("Unkown Phoneme: " + word.getVocal().charAt(j));
                 }
             }
+            //معالجة الأحرف الخاصة
+            handleSpecialLetters(res);
 
         }
 
-        //معالجة الأحرف الخاصة
-        handleSpecialLetters(res);
-        //التحويل لنص
-        Phoneme[] result = new Phoneme[res.size()];
-        for (int i = 0; i < result.length; i++) {
-            result[i] = res.get(i);
-        }
-        return result;
+        return words;
     }
 
 }

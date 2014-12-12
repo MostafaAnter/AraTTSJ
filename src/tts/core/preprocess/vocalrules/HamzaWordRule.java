@@ -11,14 +11,15 @@ import tts.core.ArabicMoves;
  *
  * @author ossama
  */
-public class HamzaWordRule extends WordVocalRule {
+public class HamzaWordRule extends VocalRule {
 
     public HamzaWordRule() {
-        Priority = 3;
+        Priority = 4;
     }
 
     @Override
-    protected String evaluate(String previousWord, String currentWord) {
+    public String evaluate(String previousWord, String currentWord) {
+        currentWord = currentWord.replaceAll(ArabicMoves.HAMZAT, "" + ArabicMoves.HAMZA);
         if (currentWord.charAt(0) == ArabicMoves.HAMZA && (previousWord == null || isEndOfSentence(previousWord))) {
             currentWord = currentWord.substring(1);
         }

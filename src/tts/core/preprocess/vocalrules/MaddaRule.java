@@ -11,15 +11,15 @@ import tts.core.ArabicMoves;
  *
  *
  */
-public class MaddaRule extends TextVocalRule {
+public class MaddaRule extends VocalRule {
 
     public MaddaRule() {
-        Priority =3;
+        Priority =5;
     }
 
     @Override
-    protected String evaluate(String text) {
-        return text.replaceAll(ArabicMoves.MADDA + "", "" + ArabicMoves.HAMZA
+    public String evaluate(String previousWord,String currentWord) {
+        return currentWord.replaceAll(ArabicMoves.MADDA + "", "" + ArabicMoves.HAMZA
                 + ArabicMoves.FATHAH + ArabicMoves.FATHAH
                 + ArabicMoves.FATHAH);
     }

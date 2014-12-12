@@ -11,14 +11,14 @@ import tts.core.ArabicMoves;
  *
  *
  */
-public class AlefTafreeqRule extends WordVocalRule {
+public class AlefTafreeqRule extends VocalRule {
 
     public AlefTafreeqRule() {
-        Priority = 6;
+        Priority = 8;
     }
 
     @Override
-    protected String evaluate(String previousWord, String currentWord) {
+    public String evaluate(String previousWord, String currentWord) {
         if (currentWord.endsWith("" + ArabicMoves.WOW + ArabicMoves.ALEF)) {
             currentWord = currentWord.substring(0, currentWord.length() - 1);
         }

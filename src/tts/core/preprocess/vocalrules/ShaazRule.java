@@ -11,14 +11,14 @@ import tts.core.ArabicMoves;
  *
  * @author ossama
  */
-public class ShaazRule extends WordVocalRule {
+public class ShaazRule extends VocalRule {
 
     public ShaazRule() {
-        Priority = 8;
+        Priority = 11;
     }
 
     @Override
-    protected String evaluate(String previousWord, String currentWord) {
+    public String evaluate(String previousWord, String currentWord) {
         if (currentWord.matches("" + ArabicMoves.AEEN + ArabicMoves.FATHAH + ArabicMoves.MEEM + ArabicMoves.RAA
                 + "(" + ArabicMoves.FATHAH + "|" + ArabicMoves.DAMMAH + "|"
                 + ArabicMoves.KASRAH + ")?" + ArabicMoves.WOW)) {

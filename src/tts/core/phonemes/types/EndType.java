@@ -11,5 +11,5 @@ package tts.core.phonemes.types;
  */
 public enum EndType {
 
-    Comma, Dot, SayDots, SemiColon, QuestionMark, ExeclamationMark, EndOfData
+    Comma, Dot, SayDots, SemiColon, QuestionMark, ExeclamationMark, EndOfData,Space
 }

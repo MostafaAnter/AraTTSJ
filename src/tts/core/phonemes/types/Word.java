@@ -11,7 +11,7 @@ import java.util.ArrayList;
  *
  * @author ossama
  */
-public class Word implements Phonemeable {
+public class Word {
 
     private String Normal, Vocal;
     ArrayList<Phoneme> phonemes;
@@ -48,7 +48,6 @@ public class Word implements Phonemeable {
         return phonemes;
     }
 
-    @Override
     public Phoneme[] getPhonemes() {
         Phoneme[] result = new Phoneme[phonemes.size()];
         result = phonemes.toArray(result);
@@ -56,10 +55,8 @@ public class Word implements Phonemeable {
 
     }
 
-    @Override
     public EndType getEnd() {
         return end;
     }
 
-    
 }

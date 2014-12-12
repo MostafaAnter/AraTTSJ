@@ -11,14 +11,14 @@ import tts.core.ArabicMoves;
  *
  *
  */
-public class HamaztWasilRule extends WordVocalRule {
+public class HamaztWasilRule extends VocalRule {
 
     public HamaztWasilRule() {
-        Priority = 5;
+        Priority = 7;
     }
 
     @Override
-    protected String evaluate(String previousWord, String currentWord) {
+    public String evaluate(String previousWord, String currentWord) {
         if (currentWord.startsWith("" + ArabicMoves.ALEF + ArabicMoves.LAM + ArabicMoves.ALEF)) {
             currentWord = "" + ArabicMoves.LAM + currentWord.substring(3);
         } else if (currentWord.charAt(0) == ArabicMoves.ALEF) {

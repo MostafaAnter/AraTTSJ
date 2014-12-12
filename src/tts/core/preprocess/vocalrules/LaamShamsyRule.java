@@ -11,14 +11,14 @@ import tts.core.ArabicMoves;
  *
  *
  */
-public class LaamShamsyRule extends WordVocalRule {
+public class LaamShamsyRule extends VocalRule {
 
     public LaamShamsyRule() {
-        Priority = 1;
+        Priority = 2;
     }
 
     @Override
-    protected String evaluate(String previousWord, String currentWord) {
+    public String evaluate(String previousWord, String currentWord) {
         final char[] SHAMS_LETTERS = {ArabicMoves.TAA, ArabicMoves.THAA,
             ArabicMoves.DAAL, ArabicMoves.ZHAAL, ArabicMoves.RAA, ArabicMoves.ZAI,
             ArabicMoves.SEEN, ArabicMoves.SHEEN, ArabicMoves.SAAD, ArabicMoves.DAAD,

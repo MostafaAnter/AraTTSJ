@@ -11,20 +11,20 @@ import tts.core.ArabicMoves;
  *
  * @author ossama
  */
-public class TanweenRule extends TextVocalRule {
+public class TanweenRule extends VocalRule {
 
     public TanweenRule() {
-        Priority = 4;
+        Priority = 9;
     }
 
     @Override
-    protected String evaluate(String text) {
+    public String evaluate(String previousWord,String currentWord) {
 
-        text = text.replaceAll("" + ArabicMoves.TANWEEN_FATEH + "|" + ArabicMoves.ALEF + ArabicMoves.TANWEEN_FATEH,
+        currentWord = currentWord.replaceAll("" + ArabicMoves.TANWEEN_FATEH + "|" + ArabicMoves.ALEF + ArabicMoves.TANWEEN_FATEH,
                 "" + ArabicMoves.FATHAH + ArabicMoves.NOON);
-        text = text.replaceAll("" + ArabicMoves.TANWEEN_DAMM,
+        currentWord = currentWord.replaceAll("" + ArabicMoves.TANWEEN_DAMM,
                 "" + ArabicMoves.DAMMAH + ArabicMoves.NOON);
-        return text.replaceAll("" + ArabicMoves.TANWEEN_KASER,
+        return currentWord.replaceAll("" + ArabicMoves.TANWEEN_KASER,
                 "" + ArabicMoves.KASRAH + ArabicMoves.NOON);
     }
 

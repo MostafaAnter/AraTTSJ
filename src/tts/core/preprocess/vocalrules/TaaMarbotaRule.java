@@ -11,14 +11,14 @@ import tts.core.ArabicMoves;
  *
  *
  */
-public class TaaMarbotaRule extends WordVocalRule {
+public class TaaMarbotaRule extends VocalRule {
 
     public TaaMarbotaRule() {
-        Priority = 4;
+        Priority = 6;
     }
 
     @Override
-    protected String evaluate(String previousWord, String currentWord) {
+    public String evaluate(String previousWord, String currentWord) {
         if (currentWord.endsWith("" + ArabicMoves.TAA_MARBOOTA)) {
             currentWord = currentWord.replaceAll("" + ArabicMoves.TAA_MARBOOTA, "" + ArabicMoves.HAA);
         } else {

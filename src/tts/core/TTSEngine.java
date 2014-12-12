@@ -11,6 +11,7 @@ import tts.core.preprocess.PreProcesser;
 import java.io.File;
 import java.io.PrintWriter;
 import java.util.Scanner;
+import tts.core.phonemes.types.Word;
 
 /**
  * هذا الصف هو الواجهة التي سيتعامل معها المسخدم لإنشاء المقاطع الصوتية من
@@ -20,8 +21,7 @@ public class TTSEngine {
 
     private final PreProcesser pre;
     private final PhonemeGenerator gen;
-    private Phoneme[] phonemes;
-    private String[] vocals;
+    private Word[] words;
     private String error;
 
     /**
@@ -44,69 +44,13 @@ public class TTSEngine {
      * خطأ استخدم التابع {@link TTSEngine#getError() }
      */
     public boolean convert(String text, String MBROLAPath, String DBPath, String AudioTarget) {
-        error = "";
-        try {
-            //معرفة مسار الملف الصوتي
-            String path = AudioTarget.substring(0, AudioTarget.lastIndexOf(System.getProperty("file.separator")) + 1);
-            //بدء عملية التحويل
-            //أولاً المعالجة المسبقة
-            vocals = pre.preProcess(text);
-            //التحويل لمقاطع صوتية
-            phonemes = gen.generatePhoneme(vocals);
-            //كتابة المقاطع الصوتية إلى ملف .pho
-
-            File opho = new File(path + "out.pho");
-            if (opho.exists()) {
-                opho.delete();
-            }
-            //كتابة ملف المقاطع الصوتية
-            PrintWriter out = new PrintWriter(opho);
-            for (Phoneme phoneme : phonemes) {
-                out.println(phoneme);
-                out.flush();
-            }
-            out.close();
-            //بدء التحويل إلى صوت
-            File owav = new File(AudioTarget);
-            if (owav.exists()) {
-                owav.delete();
-            }
-//            تشغيل الـ MBROLA
-            Scanner in = new Scanner(Runtime.getRuntime().exec(new String[]{MBROLAPath, DBPath, opho.getAbsolutePath(), owav.getAbsolutePath()}).getErrorStream());
-            String result = "";
-            while (in.hasNext()) {
-                result += in.nextLine();
-            }
-            //التنفيذ تم بدون مشاكل
-            if (!result.equals("")) {
-                //من أجل معرفة الخطأ
-                error = result;
-                return false;
-            }
-        } catch (Exception e) {
-            //من أجل معرفة الخطأ
-            error = e.getMessage();
-            return false;
-        }
+        words = pre.preProcess(text);
+        words = gen.generatePhoneme(words);
         return true;
     }
 
-    /**
-     * لمعرفة المقاطع الصوتية المستخدمة في التحويل
-     *
-     * @return قائمة المقاطع الصوتية المستخدمة في التحويل
-     */
-    public Phoneme[] getPhonemes() {
-        return phonemes;
-    }
-
-    /**
-     * لمعرفة الكتابة الصوتية الموافقة للنص المكتوب
-     *
-     * @return الكتابة الصوتية الموافقة للنص المكتوب
-     */
-    public String[] getVocals() {
-        return vocals;
+    public Word[] getWords() {
+        return words;
     }
 
     /**

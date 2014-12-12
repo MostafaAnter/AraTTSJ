@@ -11,15 +11,15 @@ import tts.core.ArabicMoves;
  *
  *
  */
-public class AlefMaqsouraRule extends TextVocalRule {
+public class AlefMaqsouraRule extends VocalRule {
 
     public AlefMaqsouraRule() {
         Priority = 1;
     }
 
     @Override
-    protected String evaluate(String text) {
-        return text.replaceAll(ArabicMoves.ALEF_MAQSOORA + "",
+    public String evaluate(String previousWord,String currentWord) {
+        return currentWord.replaceAll(ArabicMoves.ALEF_MAQSOORA + "",
                 "" + ArabicMoves.FATHAH + ArabicMoves.FATHAH);
     }
 

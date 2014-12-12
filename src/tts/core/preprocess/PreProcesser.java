@@ -5,10 +5,15 @@
  */
 package tts.core.preprocess;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.StringTokenizer;
 import tts.core.ArabicMoves;
-import tts.core.preprocess.vocalrules.TextVocalRule;
+import tts.core.phonemes.types.CharToEnd;
+import tts.core.phonemes.types.EndType;
+import tts.core.phonemes.types.Word;
+
 import tts.core.preprocess.vocalrules.VocalRule;
-import tts.core.preprocess.vocalrules.WordVocalRule;
 
 /**
  * هذا الصف يعالح النص لغوياً قبل تحويله لمقاطع صوتية.
@@ -59,8 +64,7 @@ import tts.core.preprocess.vocalrules.WordVocalRule;
  */
 public class PreProcesser {
 
-    private static VocalRule[] textRules = TextVocalRule.getSet();
-    private static VocalRule[] wordRules = WordVocalRule.getSet();
+    private static final VocalRule[] wordRules = VocalRule.getSet();
 
     /**
      * الأسطر الفارغة
@@ -167,7 +171,7 @@ public class PreProcesser {
      * @throws IllegalArgumentException إذا كان النص المرر غير موجوداًًً او
      * فارغاً
      */
-    public String[] preProcess(String text) {
+    public Word[] preProcess(String text) {
         if (text == null) {
             throw new IllegalArgumentException("Text cannot be null");
         }
@@ -176,21 +180,28 @@ public class PreProcesser {
         }
         //معالجة النص
         text = repaireText(text);
-        for (int i = 0; i < textRules.length; i++) {
-            text = textRules[i].evaluate(text);
-        }
+
         //التقسيم
-        String result[] = text.split(" ");
-        for (int j = 0; j < wordRules.length; j++) {
-            result[0] = wordRules[j].evaluate(null, result[0]);
-        }
-        for (int i = 1; i < result.length; i++) {
-            if (!isNotAWord(result[i])) {
-                for (int j = 0; j < wordRules.length; j++) {
-                    result[i] = wordRules[j].evaluate(result[i - 1], result[i]);
+        StringTokenizer tokens = new StringTokenizer(text, " ");
+        ArrayList<Word> words = new ArrayList<>();
+        String previous = null;
+        while (tokens.hasMoreTokens()) {
+            String current = tokens.nextToken();
+            if (previous != null) {
+                if (isNotAWord(current)) {
+                    words.get(words.size() - 1).setEnd(CharToEnd.charToEnd(current.charAt(0)));
+                    continue;
                 }
             }
+            String copy = current;
+            for (VocalRule wordRule : wordRules) {
+                current = wordRule.evaluate(previous, current);
+                words.add(new Word(copy, current, EndType.Space));
+            }
         }
+        words.get(words.size() - 1).setEnd(EndType.EndOfData);
+        Word[] result = new Word[words.size()];
+        result = words.toArray(result);
         return result;
     }
 

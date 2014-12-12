@@ -27,6 +27,8 @@ public class CharToEnd {
                 return EndType.ExeclamationMark;
             case ArabicMoves.SAY_DOTS:
                 return EndType.SayDots;
+            case ' ':
+                return EndType.Space;
             default:
                 return EndType.EndOfData;
         }
