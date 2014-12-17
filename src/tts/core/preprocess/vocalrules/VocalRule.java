@@ -27,8 +27,20 @@ public abstract class VocalRule implements Comparable<VocalRule> {
      */
     public abstract String evaluate(String previousWord, String currentWord);
 
+    /**
+     * أولوية القاعدة.
+     *
+     * كلما كان الرقم أصغر كانت الأولوية أعلى
+     */
     protected int Priority;
 
+    /**
+     * قراءة أولوية القاعدة.
+     *
+     * كلما كات الرقم أصغر كانت الأولوية أعلى
+     *
+     * @return أولوية القاعدة
+     */
     public int getPriority() {
         return Priority;
     }
