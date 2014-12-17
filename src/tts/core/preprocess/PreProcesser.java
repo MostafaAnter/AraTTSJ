@@ -6,10 +6,8 @@
 package tts.core.preprocess;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.StringTokenizer;
 import tts.core.ArabicMoves;
-import tts.core.phonemes.types.CharToEnd;
 import tts.core.phonemes.types.EndType;
 import tts.core.phonemes.types.Word;
 

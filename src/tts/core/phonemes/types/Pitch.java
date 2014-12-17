@@ -6,7 +6,7 @@
 package tts.core.phonemes.types;
 
 /**
- * الطبقة الصوتية للمقطع الصوتي
+ * الطبقة الصوتية للمقطع الصوتي.
  */
 public class Pitch implements Cloneable {
 

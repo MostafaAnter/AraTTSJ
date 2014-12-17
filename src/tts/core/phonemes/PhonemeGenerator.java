@@ -146,7 +146,7 @@ public class PhonemeGenerator {
     /**
      * يقوم هذا التابع بتوليد المقاطع الصوتية
      *
-     * @param text النص الذي تمت معالجته من قبل الصف {@link PreProcesser}
+     * @param words قائمة الكلمات التي نريد توليد المقاطع الصوتية
      * @return قائمة المقاطع الصوتية التي ستمرر للنظام الخبير
      * @throws IllegalArgumentException في حال لم يوجد اللفظ الصوتي ضمن القاعدة
      */

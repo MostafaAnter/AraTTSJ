@@ -8,7 +8,10 @@ package tts.core.preprocess.vocalrules;
 import tts.core.ArabicMoves;
 
 /**
+ * قاعدة معالجة ألف التفريق.
  *
+ * ألف التفريق تأتي بعد واو الجماعة في الماضي و بالتالي عندما تنتهي الكلمة بواو
+ * و ألف نحذف هذه الألف
  *
  */
 public class AlefTafreeqRule extends VocalRule {

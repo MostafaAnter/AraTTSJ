@@ -8,17 +8,19 @@ package tts.core.preprocess.vocalrules;
 import tts.core.ArabicMoves;
 
 /**
- *
+ * قاعدة معالجة المدة.
+ * 
+ * تعالج المدة بأن تستبدل بهمزة تليها ثلاث قتحات
  *
  */
 public class MaddaRule extends VocalRule {
 
     public MaddaRule() {
-        Priority =5;
+        Priority = 5;
     }
 
     @Override
-    public String evaluate(String previousWord,String currentWord) {
+    public String evaluate(String previousWord, String currentWord) {
         return currentWord.replaceAll(ArabicMoves.MADDA + "", "" + ArabicMoves.HAMZA
                 + ArabicMoves.FATHAH + ArabicMoves.FATHAH
                 + ArabicMoves.FATHAH);

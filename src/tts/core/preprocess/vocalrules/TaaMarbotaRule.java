@@ -9,7 +9,10 @@ import tts.core.ArabicMoves;
 
 /**
  *
+ * قاعدة معالجة التاء المربوطة.
  *
+ * تعالج التاء المربوطة بقلبها تاء مبسوطة متبوعة بحركة التاء المربوطة الأصلية في
+ * حال كانت متحركة، و هاء في حال السكون
  */
 public class TaaMarbotaRule extends VocalRule {
 

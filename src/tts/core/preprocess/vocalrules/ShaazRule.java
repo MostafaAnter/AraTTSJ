@@ -9,7 +9,13 @@ import tts.core.ArabicMoves;
 
 /**
  *
- * @author ossama
+ * قاعدة لمعالجة حالات خاصة أو شاذة.
+ *
+ * من هذه الحالات :
+ *
+ * <ul>
+ * <li>معالجة اسم عمرو بحذف الواو من آخره</li>
+ * </ul>
  */
 public class ShaazRule extends VocalRule {
 

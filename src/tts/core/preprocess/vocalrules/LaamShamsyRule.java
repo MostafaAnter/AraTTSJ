@@ -9,7 +9,10 @@ import tts.core.ArabicMoves;
 
 /**
  *
+ * قاعدة معالجة اللام الشمسية.
  *
+ * تعالج اللام الشمسية بأن تستبدل بهمزة في حال كانت في بداية الجملة و تحذف
+ * خلافاً لذلك
  */
 public class LaamShamsyRule extends VocalRule {
 

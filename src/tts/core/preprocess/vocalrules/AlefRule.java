@@ -8,8 +8,9 @@ package tts.core.preprocess.vocalrules;
 import tts.core.ArabicMoves;
 
 /**
- *
- * @author ossama
+ * قاعدة معالجة حرف الألف.
+ * 
+ * نستبدل حرف الألف بفتحتين متتالتين
  */
 public class AlefRule extends VocalRule {
 

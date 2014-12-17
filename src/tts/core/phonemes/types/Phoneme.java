@@ -8,7 +8,7 @@ package tts.core.phonemes.types;
 import java.util.ArrayList;
 
 /**
- * المقكع الصوتي بكل بياناته
+ * المقطع الصوتي بكل بياناته
  */
 public class Phoneme implements Cloneable {
 
@@ -69,7 +69,7 @@ public class Phoneme implements Cloneable {
     }
 
     @Override
-    public Object clone() {
+    public Object clone() throws CloneNotSupportedException {
         Phoneme val = new Phoneme(Phoneme, Time);
         val.setPitch((ArrayList<Pitch>) Pitch.clone());
         return val;

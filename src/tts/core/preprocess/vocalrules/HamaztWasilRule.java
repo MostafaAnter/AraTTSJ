@@ -2,13 +2,15 @@ package tts.core.preprocess.vocalrules;
 
 import tts.core.ArabicMoves;
 
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 /**
+ * قاعدة معالجة همزة الوصل.
  *
+ * تعالج همزة الوصل بأن تحذف من بداية الكلمة.
+ *
+ * في حالة خاصة ندخل ال التعريف القمرية على كلمة تبدأ بهمزة وصل، و بالتالي يوجد
+ * لدينا همزتي وصل للحذف
+ *
+ * مثال : اسم و الاسم
  *
  */
 public class HamaztWasilRule extends VocalRule {

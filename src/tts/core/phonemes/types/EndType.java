@@ -8,18 +8,48 @@ package tts.core.phonemes.types;
 import tts.core.ArabicMoves;
 
 /**
- *
- * @author ossama
+ * يتضمن هذا الصف أنواع النهايات الممكنة للكلمة
  */
 public enum EndType {
 
-    Space, Comma, Dot, SayDots, SemiColon, QuestionMark, ExeclamationMark, EndOfData;
+    /**
+     * الفراغ
+     */
+    Space,
+    /**
+     * الفاصلة
+     */
+    Comma,
+    /**
+     *النقطة
+     */
+    Dot,
+    /**
+     *نقطا القول  (:)
+     */
+    SayDots,
+    /**
+     *الفاصلة المنقوطة
+     */
+    SemiColon,
+    /**
+     *علامة الاستفهام
+     */
+    QuestionMark,
+    /**
+     * علامة التعجب
+     */
+    ExeclamationMark,
+    /**
+     * نهاية البيانات
+     */
+    EndOfData;
 
+    @Override
     public String toString() {
-        switch (ordinal())
-        {
+        switch (ordinal()) {
             case 0:
-                return "فراغ"  ;
+                return "فراغ";
             case 1:
                 return "فاصلة";
             case 2:
@@ -34,11 +64,16 @@ public enum EndType {
                 return "إشارة تعجب";
             case 7:
                 return "نهاية البيانات";
-            default :
+            default:
                 return "";
         }
     }
-    
+
+    /**
+     * يقوم بقراءة المحرف و توليد النهاية المناسبة
+     * @param c محرف نهاية الكلمة
+     * @return النهاية الموافقة 
+     */
     public static EndType charToEnd(char c) {
         switch (c) {
             case ArabicMoves.DOT:
@@ -59,8 +94,13 @@ public enum EndType {
                 return EndType.EndOfData;
         }
     }
-    
-       public static char EndToChar(EndType end) {
+
+    /**
+     * يقوم بتحويل النهاية للمحرف الموافق
+     * @param end نهاية الكلمة
+     * @return المحرف الموافق و يعيد القيمة "\0" في حال كانت النهاية هي نهاية البيانات
+     */
+    public static char EndToChar(EndType end) {
         switch (end) {
             case Dot:
                 return ArabicMoves.DOT;

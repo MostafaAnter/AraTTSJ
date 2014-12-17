@@ -9,7 +9,10 @@ import tts.core.ArabicMoves;
 
 /**
  *
+ * قاعدة معالجة الشدة.
  *
+ * تعالج الشدة بأن نعوض عنها بتكرار الحرف المشدد ، ساكناً ثم متحركاً بالحركة
+ * الأصلية للحرف
  */
 public class ShaddaRule extends VocalRule {
 

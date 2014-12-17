@@ -8,7 +8,9 @@ package tts.core.preprocess.vocalrules;
 import tts.core.ArabicMoves;
 
 /**
- *
+ * قاعدة معالجة الألف المقصورى.
+ * 
+ * نستبدل الألف المقصورة بألف ممدودة
  *
  */
 public class AlefMaqsouraRule extends VocalRule {
@@ -18,7 +20,7 @@ public class AlefMaqsouraRule extends VocalRule {
     }
 
     @Override
-    public String evaluate(String previousWord,String currentWord) {
+    public String evaluate(String previousWord, String currentWord) {
         return currentWord.replaceAll(ArabicMoves.ALEF_MAQSOORA + "",
                 "" + ArabicMoves.FATHAH + ArabicMoves.FATHAH);
     }

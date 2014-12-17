@@ -9,7 +9,10 @@ import tts.core.ArabicMoves;
 
 /**
  *
- * @author ossama
+ * قاعدة معالجة الهمزة.
+ *
+ * تعالج الهمزة بأن تحذف و أن نبقي على حركتها إذا كانت في بداية الجملة و ذلك لأن
+ * نظام MBROLAلا يسمح ببدء الكلام برمز الهمزة و هو ?
  */
 public class HamzaWordRule extends VocalRule {
 

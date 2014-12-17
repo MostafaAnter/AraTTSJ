@@ -7,6 +7,7 @@ package tts.gui;
 
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.swing.JOptionPane;
 import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
 import javax.swing.plaf.ButtonUI;
@@ -23,7 +24,7 @@ import tts.core.preprocess.vocalrules.VocalRule;
  * @author ossama
  */
 public class FrmMain extends javax.swing.JFrame {
-
+    
     TTSEngine tts;
     Settings set = Settings.getSettings();
     String AudioTarget = "";
@@ -101,15 +102,19 @@ public class FrmMain extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
-
+        
         String text = txt.getText();
         if (!text.equals("")) {
-            tts.convert(text, "", "", AudioTarget);
-            Word[] words = tts.getWords();
-            vp.setWords(words);
-            txt.setVisible(false);
-            vp.setVisible(true);
-            View.setViewportView(vp);
+            Word[] words = tts.convert(text);
+            if (words == null) {
+                JOptionPane.showMessageDialog(this, "حدث الخطأ التالي :\n" + tts.getError(), "خطأ", JOptionPane.ERROR_MESSAGE);
+            } else {
+                vp.setWords(words);
+                txt.setVisible(false);
+                vp.setVisible(true);
+                View.setViewportView(vp);
+            }
+            
         }
     }//GEN-LAST:event_jButton2ActionPerformed
 
@@ -124,7 +129,7 @@ public class FrmMain extends javax.swing.JFrame {
      */
     public static void main(String args[]) {
         VocalRule[] y = VocalRule.getSet();
-
+        
         for (int i = 0; i < y.length; i++) {
             System.out.println(y[i].getPriority() + " " + y[i].toString());
         }

@@ -37,16 +37,19 @@ public class TTSEngine {
      * يقوم بتحويل النص لكلام
      *
      * @param text النص المراد تحويله لكلام
-     * @param MBROLAPath مسار برنامج MBROLA
-     * @param DBPath مسار قاعدة المقاطع الصوتية
-     * @param AudioTarget مكان حفظ المقطع الصوتي
-     * @return trueفي حال كان التحويل ناجحا و falseفي حال حدوث خطأ . في حال حدوث
-     * خطأ استخدم التابع {@link TTSEngine#getError() }
+     * @return قائمة من الكلمات و الفونيمات الموافقة لهاو, null في حال حدوث خطأ
+     * و لمعرفة الخطأ راجع {@link TTSEngine#getError() }
      */
-    public boolean convert(String text, String MBROLAPath, String DBPath, String AudioTarget) {
-        words = pre.preProcess(text);
-        words = gen.generatePhoneme(words);
-        return true;
+    public Word[] convert(String text) {
+        error = "";
+        try {
+            words = pre.preProcess(text);
+            words = gen.generatePhoneme(words);
+            return words;
+        } catch (Exception e) {
+            error = e.getMessage();
+        }
+        return null;
     }
 
     public Word[] getWords() {
