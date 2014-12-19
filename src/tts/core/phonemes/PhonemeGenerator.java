@@ -10,7 +10,6 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Scanner;
@@ -36,7 +35,7 @@ public class PhonemeGenerator {
      * يقوم هذا التابع بتهيئة جدول التحويل و يتسعدعى قبل استخدام الصف لأول مرة
      * فقط
      */
-    public void intializePhonemeDB() {
+    public void initializeGenerator() {
         try {
             //القراءة من ملف قاعدة البيانات
             String DBPath = "PhonemeDB.txt";
@@ -102,7 +101,7 @@ public class PhonemeGenerator {
     /**
      * معالجة الأحرف الخاصة.
      *
-     * هذا التابع بإجراء معالجة الأحرف الخاصة و هي ص ض ط ظ باستخدام الحركات
+     * يقوم هذا التابع بإجراء معالجة الأحرف الخاصة و هي ص ض ط ظ باستخدام الحركات
      * الخاصة بها.
      *
      * @param phonemes قائمة المقاطع الصوتية التي ستتم معالجتها

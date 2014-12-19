@@ -5,9 +5,15 @@
  */
 package tts.gui;
 
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.io.IOException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.sound.sampled.LineUnavailableException;
+import javax.sound.sampled.UnsupportedAudioFileException;
 import javax.swing.JOptionPane;
+import javax.swing.Timer;
 import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
 import javax.swing.plaf.ButtonUI;
@@ -24,7 +30,7 @@ import tts.core.preprocess.vocalrules.VocalRule;
  * @author ossama
  */
 public class FrmMain extends javax.swing.JFrame {
-    
+
     TTSEngine tts;
     Settings set = Settings.getSettings();
     String AudioTarget = "";
@@ -36,9 +42,19 @@ public class FrmMain extends javax.swing.JFrame {
      * Creates new form FrmMain
      */
     public FrmMain() {
+        vp.setVisible(false);
         initComponents();
         tts = new TTSEngine();
         View.setViewportView(txt);
+        Timer t = new Timer(1, new ActionListener() {
+
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                BtnNxt.setEnabled(!txt.getText().equals(""));
+                BtnPrv.setEnabled(vp.isVisible());
+            }
+        });
+        t.start();
     }
 
     /**
@@ -50,50 +66,50 @@ public class FrmMain extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        jToolBar1 = new javax.swing.JToolBar();
-        jButton1 = new javax.swing.JButton();
-        jButton2 = new javax.swing.JButton();
+        Tbl = new javax.swing.JToolBar();
+        BtnPrv = new javax.swing.JButton();
+        BtnNxt = new javax.swing.JButton();
         View = new javax.swing.JScrollPane();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("AraTTS");
         setMinimumSize(new java.awt.Dimension(500, 350));
 
-        jToolBar1.setRollover(true);
+        Tbl.setRollover(true);
 
-        jButton1.setText("السابق");
-        jButton1.setFocusable(false);
-        jButton1.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
-        jButton1.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
-        jButton1.addActionListener(new java.awt.event.ActionListener() {
+        BtnPrv.setText("السابق");
+        BtnPrv.setFocusable(false);
+        BtnPrv.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+        BtnPrv.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
+        BtnPrv.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton1ActionPerformed(evt);
+                BtnPrvActionPerformed(evt);
             }
         });
-        jToolBar1.add(jButton1);
+        Tbl.add(BtnPrv);
 
-        jButton2.setText("التالي");
-        jButton2.setFocusable(false);
-        jButton2.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
-        jButton2.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
-        jButton2.addActionListener(new java.awt.event.ActionListener() {
+        BtnNxt.setText("التالي");
+        BtnNxt.setFocusable(false);
+        BtnNxt.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+        BtnNxt.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
+        BtnNxt.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton2ActionPerformed(evt);
+                BtnNxtActionPerformed(evt);
             }
         });
-        jToolBar1.add(jButton2);
+        Tbl.add(BtnNxt);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jToolBar1, javax.swing.GroupLayout.DEFAULT_SIZE, 500, Short.MAX_VALUE)
+            .addComponent(Tbl, javax.swing.GroupLayout.DEFAULT_SIZE, 500, Short.MAX_VALUE)
             .addComponent(View)
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addComponent(jToolBar1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(Tbl, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(View, javax.swing.GroupLayout.DEFAULT_SIZE, 345, Short.MAX_VALUE))
         );
@@ -101,39 +117,52 @@ public class FrmMain extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
-        
-        String text = txt.getText();
-        if (!text.equals("")) {
-            Word[] words = tts.convert(text);
-            if (words == null) {
-                JOptionPane.showMessageDialog(this, "حدث الخطأ التالي :\n" + tts.getError(), "خطأ", JOptionPane.ERROR_MESSAGE);
-            } else {
-                vp.setWords(words);
-                txt.setVisible(false);
-                vp.setVisible(true);
-                View.setViewportView(vp);
-            }
-            
-        }
-    }//GEN-LAST:event_jButton2ActionPerformed
+    private void BtnNxtActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_BtnNxtActionPerformed
+        if (txt.isVisible()) {
+            String text = txt.getText();
+            if (!text.equals("")) {
+                Word[] words = tts.convert(text);
+                if (words == null) {
+                    JOptionPane.showMessageDialog(this, "حدث الخطأ التالي أثناء التحويل :\n" + tts.getError(), "خطأ", JOptionPane.ERROR_MESSAGE);
+                } else {
+                    vp.setWords(words);
+                    txt.setVisible(false);
+                    vp.setVisible(true);
+                    View.setViewportView(vp);
+                }
 
-    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+            }
+        } else {
+            if (!tts.createAudio(Settings.getSettings().getMBROLA(),
+                    Settings.getSettings().getPhonemeDB(), "/home/ossama/Desktop/a.wav")) {
+                JOptionPane.showMessageDialog(this, "حدث الخطأ التالي أثناء التوليد :\n" + tts.getError(), "خطأ", JOptionPane.ERROR_MESSAGE);
+
+            } else {
+                AudioPlayer a = new AudioPlayer();
+                try {
+                    a.open("/home/ossama/Desktop/a.wav");
+                } catch (UnsupportedAudioFileException ex) {
+                    Logger.getLogger(FrmMain.class.getName()).log(Level.SEVERE, null, ex);
+                } catch (IOException ex) {
+                    Logger.getLogger(FrmMain.class.getName()).log(Level.SEVERE, null, ex);
+                } catch (LineUnavailableException ex) {
+                    Logger.getLogger(FrmMain.class.getName()).log(Level.SEVERE, null, ex);
+                }
+                a.play();
+            }
+        }
+    }//GEN-LAST:event_BtnNxtActionPerformed
+
+    private void BtnPrvActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_BtnPrvActionPerformed
         txt.setVisible(true);
         vp.setVisible(false);
         View.setViewportView(txt);
-    }//GEN-LAST:event_jButton1ActionPerformed
+    }//GEN-LAST:event_BtnPrvActionPerformed
 
     /**
      * @param args the command line arguments
      */
     public static void main(String args[]) {
-        VocalRule[] y = VocalRule.getSet();
-        
-        for (int i = 0; i < y.length; i++) {
-            System.out.println(y[i].getPriority() + " " + y[i].toString());
-        }
-        System.out.println(EndType.QuestionMark.ordinal());
         try {
             /* Set the Nimbus look and feel */
             //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
@@ -160,9 +189,9 @@ public class FrmMain extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton BtnNxt;
+    private javax.swing.JButton BtnPrv;
+    private javax.swing.JToolBar Tbl;
     private javax.swing.JScrollPane View;
-    private javax.swing.JButton jButton1;
-    private javax.swing.JButton jButton2;
-    private javax.swing.JToolBar jToolBar1;
     // End of variables declaration//GEN-END:variables
 }

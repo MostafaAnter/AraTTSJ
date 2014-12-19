@@ -9,6 +9,7 @@ import tts.core.phonemes.types.Phoneme;
 import tts.core.phonemes.PhonemeGenerator;
 import tts.core.preprocess.PreProcesser;
 import java.io.File;
+import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.Scanner;
 import tts.core.phonemes.types.Word;
@@ -30,7 +31,7 @@ public class TTSEngine {
     public TTSEngine() {
         pre = new PreProcesser();
         gen = new PhonemeGenerator();
-        gen.intializePhonemeDB();
+        gen.initializeGenerator();
     }
 
     /**
@@ -50,6 +51,53 @@ public class TTSEngine {
             error = e.getMessage();
         }
         return null;
+    }
+
+    /**
+     * يقوم هذا التابع بتوليد الملف الصوتي.
+     *
+     * سيكون ناتج تنفيذ هذا التابع ملفان الأول يحوي المقاع الصوتية و الثانية هو
+     * الكلام بعد أن حول لمقطع صوتي
+     *
+     * @param MBROLA مسار برنامج MBROLA
+     * @param PhonemeDB مسار قاعدة بيانات المقاطع الصوتية
+     * @param Target مسار حفظ الملف الصوتي
+     * @return true في حال كان التحويل ناجحاً, false إذا لم ينجح و لمعرفة تفاصيل
+     * عدم النجاح استدعي التابع {@link TTSEngine#getError()}
+     */
+    public boolean createAudio(String MBROLA, String PhonemeDB, String Target) {
+        try {
+          //التحقق من وجود الملفات مسبقا و حذفها إذا كانت موجودة
+            File wav = new File(Target);
+            if (wav.exists()) {
+                wav.delete();
+            }
+            File pho = new File(Target.replace(".wav", ".pho"));
+            if (pho.exists()) {
+                pho.delete();
+
+            }
+            //إنشاء ملف 
+            //pho
+            PrintWriter out = new PrintWriter(pho);
+            for (Word word : words) {
+                for (Phoneme phoneme : word.getPhonemes()) {
+                    out.println(phoneme.toString());
+                    out.flush();
+                }
+            }
+            //   استدعاء برنامح MBROLA
+            //و الانتظار حتى انتهاء التنفيذ
+            Runtime rt = Runtime.getRuntime();
+            rt.exec(new String[]{
+                MBROLA, PhonemeDB, pho.getAbsolutePath(), Target
+            }).waitFor();
+            out.close();
+            return true;
+        } catch (IOException | InterruptedException e) {
+            error = e.getMessage();
+            return false;
+        }
     }
 
     public Word[] getWords() {

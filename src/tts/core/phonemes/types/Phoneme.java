@@ -63,13 +63,13 @@ public class Phoneme implements Cloneable {
      */
     public void setPitch(ArrayList<Pitch> Pitch) {
         if (Pitch == null) {
-            throw new IllegalArgumentException("Pitch aray list cannot be null");
+            throw new IllegalArgumentException("Pitch array list cannot be null");
         }
         this.Pitch = Pitch;
     }
 
     @Override
-    public Object clone() throws CloneNotSupportedException {
+    public Object clone() {
         Phoneme val = new Phoneme(Phoneme, Time);
         val.setPitch((ArrayList<Pitch>) Pitch.clone());
         return val;
@@ -77,6 +77,7 @@ public class Phoneme implements Cloneable {
 
     /**
      * المقطع الصوتي
+     *
      * @return المقطع الصوتي
      */
     public String getPhoneme() {
@@ -85,22 +86,27 @@ public class Phoneme implements Cloneable {
 
     /**
      * تعديل المقطع الصوتي
+     *
      * @param Phoneme المقطع الصوتي الجديد
      */
     public void setPhoneme(String Phoneme) {
         this.Phoneme = Phoneme;
     }
-/**
- * المدة الزمنية للمقطع
- * @return المدة الزمنية للمقطع مقدرةً بالميلي ثانية
- */
+
+    /**
+     * المدة الزمنية للمقطع
+     *
+     * @return المدة الزمنية للمقطع مقدرةً بالميلي ثانية
+     */
     public int getTime() {
         return Time;
     }
-/**
- * تغيير المدة الزمنية للمقطع
- * @param Time المدة الزمنية الجديدة مقدرةً بالميلي ثانية
- */
+
+    /**
+     * تغيير المدة الزمنية للمقطع
+     *
+     * @param Time المدة الزمنية الجديدة مقدرةً بالميلي ثانية
+     */
     public void setTime(int Time) {
         this.Time = Time;
     }

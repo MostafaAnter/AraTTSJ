@@ -24,19 +24,15 @@ public class FrmVP extends javax.swing.JPanel {
     public void setWords(Word[] words) {
         DefaultTableModel tbl = (DefaultTableModel) TblVP.getModel();
         tbl.setRowCount(0);
-        for (int i = 0; i < words.length; i++) {
-            for (int j = 0; j < words[i].getPhonemes().length; j++) {
+        for (Word word : words) {
+            for (int j = 0; j < word.getPhonemes().length; j++) {
                 if (j == 0) {
-                    tbl.addRow(new Object[]{words[i].getNormal(),
-                        words[i].getEnd().toString(), words[i].getVocal(),
-                        words[i].getPhonemes()[j].getPhoneme(),
-                        words[i].getPhonemes()[j].getTime(),
-                        words[i].getPhonemes()[j].pitchString()});
+                    tbl.addRow(new Object[]{word.getNormal(), word.getEnd().toString(),
+                        word.getVocal(), word.getPhonemes()[j].getPhoneme(),
+                        word.getPhonemes()[j].getTime(), word.getPhonemes()[j].pitchString()});
                 } else {
-                    tbl.addRow(new Object[]{"", "", "",
-                        words[i].getPhonemes()[j].getPhoneme(),
-                        words[i].getPhonemes()[j].getTime(),
-                        words[i].getPhonemes()[j].pitchString()});
+                    tbl.addRow(new Object[]{"", "", "", word.getPhonemes()[j].getPhoneme(),
+                        word.getPhonemes()[j].getTime(), word.getPhonemes()[j].pitchString()});
                 }
             }
         }
