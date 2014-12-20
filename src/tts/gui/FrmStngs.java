@@ -13,7 +13,7 @@ import javax.swing.JFileChooser;
  * @author ossama
  */
 public class FrmStngs extends javax.swing.JDialog {
-    
+
     Settings set;
 
     /**
@@ -141,10 +141,12 @@ public class FrmStngs extends javax.swing.JDialog {
     private void BtnBrwsMBROLAActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_BtnBrwsMBROLAActionPerformed
         JDialog Mbrola_Select = new JDialog(this, "الرجاء اختيار مسار MBROLA", true);
         String old_path = TxtMbrola.getText();
-        if (!(old_path.equals(""))) {
+        if (!(old_path.equals("")) && old_path.lastIndexOf(System.getProperty("file.separator")) > 0) {
+            System.out.println(old_path.lastIndexOf(System.getProperty("file.separator")));
             old_path = old_path.substring(0, old_path.lastIndexOf(System.getProperty("file.separator")));
         }
         JFileChooser choose = new JFileChooser(old_path);
+        choose.setDialogTitle("الرجاء اختيار مسار MBROLA");
         int res = choose.showOpenDialog(Mbrola_Select);
         if (res == JFileChooser.APPROVE_OPTION) {
             TxtMbrola.setText(choose.getSelectedFile().getAbsolutePath());
@@ -152,16 +154,17 @@ public class FrmStngs extends javax.swing.JDialog {
     }//GEN-LAST:event_BtnBrwsMBROLAActionPerformed
 
     private void BtnCnclActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_BtnCnclActionPerformed
-      setVisible(false);
+        setVisible(false);
     }//GEN-LAST:event_BtnCnclActionPerformed
 
     private void BtnBrwsPhonemeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_BtnBrwsPhonemeActionPerformed
         JDialog Mbrola_Select = new JDialog(this, "الرجاء اختيار مسار  قاعدة المقاطع الصوتية", true);
         String old_path = TxtPhoneme.getText();
-        if (!(old_path.equals(""))) {
+        if (!(old_path.equals("")) && old_path.lastIndexOf(System.getProperty("file.separator")) > 0) {
             old_path = old_path.substring(0, old_path.lastIndexOf(System.getProperty("file.separator")));
         }
         JFileChooser choose = new JFileChooser(old_path);
+        choose.setDialogTitle("الرجاء اختيار مسار  قاعدة المقاطع الصوتية");
         int res = choose.showOpenDialog(Mbrola_Select);
         if (res == JFileChooser.APPROVE_OPTION) {
             TxtPhoneme.setText(choose.getSelectedFile().getAbsolutePath());

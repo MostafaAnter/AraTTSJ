@@ -71,6 +71,17 @@
             <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="BtnNxtActionPerformed"/>
           </Events>
         </Component>
+        <Component class="javax.swing.JButton" name="BtnSet">
+          <Properties>
+            <Property name="text" type="java.lang.String" value="&#x625;&#x639;&#x62f;&#x627;&#x62f;&#x627;&#x62a;"/>
+            <Property name="focusable" type="boolean" value="false"/>
+            <Property name="horizontalTextPosition" type="int" value="0"/>
+            <Property name="verticalTextPosition" type="int" value="3"/>
+          </Properties>
+          <Events>
+            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="BtnSetActionPerformed"/>
+          </Events>
+        </Component>
       </SubComponents>
     </Container>
     <Container class="javax.swing.JScrollPane" name="View">

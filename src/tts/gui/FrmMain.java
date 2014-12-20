@@ -30,7 +30,7 @@ import tts.core.preprocess.vocalrules.VocalRule;
  * @author ossama
  */
 public class FrmMain extends javax.swing.JFrame {
-
+    
     TTSEngine tts;
     Settings set = Settings.getSettings();
     String AudioTarget = "";
@@ -47,7 +47,7 @@ public class FrmMain extends javax.swing.JFrame {
         tts = new TTSEngine();
         View.setViewportView(txt);
         Timer t = new Timer(1, new ActionListener() {
-
+            
             @Override
             public void actionPerformed(ActionEvent e) {
                 BtnNxt.setEnabled(!txt.getText().equals(""));
@@ -69,6 +69,7 @@ public class FrmMain extends javax.swing.JFrame {
         Tbl = new javax.swing.JToolBar();
         BtnPrv = new javax.swing.JButton();
         BtnNxt = new javax.swing.JButton();
+        BtnSet = new javax.swing.JButton();
         View = new javax.swing.JScrollPane();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
@@ -98,6 +99,17 @@ public class FrmMain extends javax.swing.JFrame {
             }
         });
         Tbl.add(BtnNxt);
+
+        BtnSet.setText("إعدادات");
+        BtnSet.setFocusable(false);
+        BtnSet.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+        BtnSet.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
+        BtnSet.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                BtnSetActionPerformed(evt);
+            }
+        });
+        Tbl.add(BtnSet);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -130,13 +142,13 @@ public class FrmMain extends javax.swing.JFrame {
                     vp.setVisible(true);
                     View.setViewportView(vp);
                 }
-
+                
             }
         } else {
             if (!tts.createAudio(Settings.getSettings().getMBROLA(),
                     Settings.getSettings().getPhonemeDB(), "/home/ossama/Desktop/a.wav")) {
                 JOptionPane.showMessageDialog(this, "حدث الخطأ التالي أثناء التوليد :\n" + tts.getError(), "خطأ", JOptionPane.ERROR_MESSAGE);
-
+                
             } else {
                 AudioPlayer a = new AudioPlayer();
                 try {
@@ -158,6 +170,11 @@ public class FrmMain extends javax.swing.JFrame {
         vp.setVisible(false);
         View.setViewportView(txt);
     }//GEN-LAST:event_BtnPrvActionPerformed
+
+    private void BtnSetActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_BtnSetActionPerformed
+        
+        new FrmStngs(this, true).setVisible(true);
+    }//GEN-LAST:event_BtnSetActionPerformed
 
     /**
      * @param args the command line arguments
@@ -191,6 +208,7 @@ public class FrmMain extends javax.swing.JFrame {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton BtnNxt;
     private javax.swing.JButton BtnPrv;
+    private javax.swing.JButton BtnSet;
     private javax.swing.JToolBar Tbl;
     private javax.swing.JScrollPane View;
     // End of variables declaration//GEN-END:variables
