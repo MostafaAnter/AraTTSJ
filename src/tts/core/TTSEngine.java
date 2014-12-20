@@ -11,7 +11,6 @@ import tts.core.preprocess.PreProcesser;
 import java.io.File;
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.util.Scanner;
 import tts.core.phonemes.types.Word;
 
 /**
@@ -67,7 +66,7 @@ public class TTSEngine {
      */
     public boolean createAudio(String MBROLA, String PhonemeDB, String Target) {
         try {
-          //التحقق من وجود الملفات مسبقا و حذفها إذا كانت موجودة
+            //التحقق من وجود الملفات مسبقا و حذفها إذا كانت موجودة
             File wav = new File(Target);
             if (wav.exists()) {
                 wav.delete();
@@ -86,13 +85,13 @@ public class TTSEngine {
                     out.flush();
                 }
             }
+            out.close();
             //   استدعاء برنامح MBROLA
             //و الانتظار حتى انتهاء التنفيذ
             Runtime rt = Runtime.getRuntime();
             rt.exec(new String[]{
                 MBROLA, PhonemeDB, pho.getAbsolutePath(), Target
             }).waitFor();
-            out.close();
             return true;
         } catch (IOException | InterruptedException e) {
             error = e.getMessage();
