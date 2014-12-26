@@ -12,25 +12,24 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.sound.sampled.LineUnavailableException;
 import javax.sound.sampled.UnsupportedAudioFileException;
+import javax.swing.JDialog;
+import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
 import javax.swing.Timer;
 import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
-import javax.swing.plaf.ButtonUI;
-import javax.swing.plaf.basic.BasicButtonUI;
+import javax.swing.filechooser.FileNameExtensionFilter;
 import tts.audioplayer.AudioPlayer;
 import tts.core.*;
-import tts.core.phonemes.types.EndType;
 import tts.core.phonemes.types.Word;
 
-import tts.core.preprocess.vocalrules.VocalRule;
 
 /**
  *
  * @author ossama
  */
 public class FrmMain extends javax.swing.JFrame {
-    
+
     TTSEngine tts;
     Settings set = Settings.getSettings();
     String AudioTarget = "";
@@ -47,7 +46,7 @@ public class FrmMain extends javax.swing.JFrame {
         tts = new TTSEngine();
         View.setViewportView(txt);
         Timer t = new Timer(1, new ActionListener() {
-            
+
             @Override
             public void actionPerformed(ActionEvent e) {
                 BtnNxt.setEnabled(!txt.getText().equals(""));
@@ -142,17 +141,34 @@ public class FrmMain extends javax.swing.JFrame {
                     vp.setVisible(true);
                     View.setViewportView(vp);
                 }
-                
+
             }
         } else {
             if (!tts.createAudio(Settings.getSettings().getMBROLA(),
                     Settings.getSettings().getPhonemeDB(), "/home/ossama/Desktop/a.wav")) {
                 JOptionPane.showMessageDialog(this, "حدث الخطأ التالي أثناء التوليد :\n" + tts.getError(), "خطأ", JOptionPane.ERROR_MESSAGE);
-                
+
             } else {
                 AudioPlayer a = new AudioPlayer();
                 try {
-                    a.open("/home/ossama/Desktop/a.wav");
+                    JDialog Save_Dlg = new JDialog(this, "الرجاء اختيار مسار  الحفط", true);
+                    String old_path = AudioTarget;
+                    if (!(old_path.equals("")) && old_path.lastIndexOf(System.getProperty("file.separator")) > 0) {
+                        System.out.println(old_path.lastIndexOf(System.getProperty("file.separator")));
+                        old_path = old_path.substring(0, old_path.lastIndexOf(System.getProperty("file.separator")));
+                    }
+                    JFileChooser choose = new JFileChooser(old_path);
+                    choose.setFileFilter(new FileNameExtensionFilter("Wave audio files (*.wav)", "wav"));
+                    choose.setDialogTitle("الرجاء اختيار مسار  الحفظ");
+                    int res = choose.showOpenDialog(Save_Dlg);
+                    if (res == JFileChooser.APPROVE_OPTION) {
+                        AudioTarget = choose.getSelectedFile().getAbsolutePath();
+                        if (!AudioTarget.toLowerCase().endsWith(".wav")) {
+                            AudioTarget = AudioTarget + ".wav";
+                        }
+                        tts.createAudio(Settings.getSettings().getMBROLA(), Settings.getSettings().getPhonemeDB(), AudioTarget);
+                        a.open(AudioTarget);
+                    }
                 } catch (UnsupportedAudioFileException ex) {
                     Logger.getLogger(FrmMain.class.getName()).log(Level.SEVERE, null, ex);
                 } catch (IOException ex) {
@@ -172,7 +188,7 @@ public class FrmMain extends javax.swing.JFrame {
     }//GEN-LAST:event_BtnPrvActionPerformed
 
     private void BtnSetActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_BtnSetActionPerformed
-        
+
         new FrmStngs(this, true).setVisible(true);
     }//GEN-LAST:event_BtnSetActionPerformed
 
