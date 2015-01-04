@@ -9,7 +9,7 @@ import java.io.BufferedInputStream;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.io.PipedInputStream;
+import java.io.InputStream;
 import javax.sound.sampled.AudioInputStream;
 import javax.sound.sampled.AudioSystem;
 import javax.sound.sampled.Clip;
@@ -42,8 +42,21 @@ public class AudioPlayer {
      * @throws LineUnavailableException
      */
     public void open(String file) throws FileNotFoundException, UnsupportedAudioFileException, IOException, LineUnavailableException {
+        open(new FileInputStream(file));
+    }
+
+    /**
+     * فتح مسلك بيانات صوتية و تهيأته للتشغيل
+     *
+     * @param afin مسلك بيانات يحتوي البيانات الصوتية
+     * @throws UnsupportedAudioFileException في حال كانت صيغة البيانات في المسلك
+     * غير مدعومة
+     * @throws IOException
+     * @throws LineUnavailableException
+     */
+    public void open(InputStream afin) throws UnsupportedAudioFileException, IOException, LineUnavailableException {
         state = STATE_UNINITIALIZED;
-        BufferedInputStream in = new BufferedInputStream(new FileInputStream(file));
+        BufferedInputStream in = new BufferedInputStream(afin);
         AudioInputStream ain = AudioSystem.getAudioInputStream(in);
         audio = (Clip) AudioSystem.getLine(new DataLine.Info(Clip.class, ain.getFormat()));
         /**
@@ -69,7 +82,6 @@ public class AudioPlayer {
             }
 
         });
-        System.out.println(ain.getFormat().toString());
         audio.open(ain);
         state = STATE_READY;
     }
@@ -113,4 +125,23 @@ public class AudioPlayer {
             audio.setMicrosecondPosition(0);
         }
     }
+
+    /**
+     * كم ميكروثانية تم قراءتها من الملف الصوتي
+     *
+     * @return كم ميكروثانية تم قراءتها من الملف الصوتي
+     */
+    public long getCurrnetTime() {
+        return audio.getMicrosecondPosition();
+    }
+
+    /**
+     * طول الملف الصوتي الكلي بالميكروثانية
+     *
+     * @return طول الملف الصوتي الكلي بالميكروثانية
+     */
+    public long getTotalTime() {
+        return audio.getMicrosecondLength();
+    }
+
 }

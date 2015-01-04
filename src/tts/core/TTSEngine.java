@@ -9,6 +9,7 @@ import tts.core.phonemes.types.Phoneme;
 import tts.core.phonemes.PhonemeGenerator;
 import tts.core.preprocess.PreProcesser;
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.PrintWriter;
 import tts.core.phonemes.types.Word;
@@ -23,11 +24,12 @@ public class TTSEngine {
     private final PhonemeGenerator gen;
     private Word[] words;
     private String error;
+    int index = 0;
 
     /**
      * إنشاء و تهيئة نظام تحويل الكلام
      */
-    public TTSEngine() {
+    private TTSEngine() {
         pre = new PreProcesser();
         gen = new PhonemeGenerator();
         gen.initializeGenerator();
@@ -61,31 +63,22 @@ public class TTSEngine {
      * @param MBROLA مسار برنامج MBROLA
      * @param PhonemeDB مسار قاعدة بيانات المقاطع الصوتية
      * @param Target مسار حفظ الملف الصوتي
+     * @param Transcription إنشاء ملف مقاطع للاستخدام مع أداة MBROLIGN
      * @return true في حال كان التحويل ناجحاً, false إذا لم ينجح و لمعرفة تفاصيل
      * عدم النجاح استدعي التابع {@link TTSEngine#getError()}
      */
-    public boolean createAudio(String MBROLA, String PhonemeDB, String Target) {
+    public boolean createAudio(String MBROLA, String PhonemeDB, String Target, boolean Transcription) {
         try {
             //التحقق من وجود الملفات مسبقا و حذفها إذا كانت موجودة
             File wav = new File(Target);
             if (wav.exists()) {
                 wav.delete();
             }
-            File pho = new File(Target.replace(".wav", ".pho"));
-            if (pho.exists()) {
-                pho.delete();
-
+            File pho = createPho(Target);
+            //إنشاء ملف المقاطع
+            if (Transcription) {
+                createTranscription(Target);
             }
-            //إنشاء ملف 
-            //pho
-            PrintWriter out = new PrintWriter(pho);
-            for (Word word : words) {
-                for (Phoneme phoneme : word.getPhonemes()) {
-                    out.println(phoneme.toString());
-                    out.flush();
-                }
-            }
-            out.close();
             //   استدعاء برنامح MBROLA
             //و الانتظار حتى انتهاء التنفيذ
             Runtime rt = Runtime.getRuntime();
@@ -97,6 +90,43 @@ public class TTSEngine {
             error = e.getMessage();
             return false;
         }
+    }
+
+    private void createTranscription(String Target) throws FileNotFoundException {
+        File trans = new File(Target.replace(".wav", ".txt"));
+        if (trans.exists()) {
+            trans.delete();
+            
+        }
+        StringBuilder build = new StringBuilder();
+        for (Word word : words) {
+            for (Phoneme phoneme : word.getPhonemes()) {
+                build.append(phoneme.getPhoneme()).append(" ");
+            }
+        }
+        PrintWriter out = new PrintWriter(trans.getAbsolutePath());
+        out.print(build.toString());
+        out.flush();
+        out.close();
+    }
+
+    private File createPho(String Target) throws FileNotFoundException {
+        File pho = new File(Target.replace(".wav", ".pho"));
+        if (pho.exists()) {
+            pho.delete();
+
+        }
+        //إنشاء ملف
+        //pho
+        PrintWriter out = new PrintWriter(pho);
+        for (Word word : words) {
+            for (Phoneme phoneme : word.getPhonemes()) {
+                out.println(phoneme.toString());
+                out.flush();
+            }
+        }
+        out.close();
+        return pho;
     }
 
     public Word[] getWords() {
@@ -112,4 +142,23 @@ public class TTSEngine {
         return error;
     }
 
+    /**
+     * استخدام نموذج Singleton في إنشاء الصف TTS Engine
+     *
+     */
+    private static TTSEngine tts;
+
+    /**
+     * الحصول على TTS Engine.
+     *
+     * في حال لم يكن موجوداً يتم إنشاؤه و يكون وحيداً
+     *
+     * @return TTSEngine
+     */
+    public static TTSEngine getTTSEngine() {
+        if (tts == null) {
+            tts = new TTSEngine();
+        }
+        return tts;
+    }
 }

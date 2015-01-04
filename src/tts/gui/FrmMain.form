@@ -36,7 +36,7 @@
           <Group type="102" alignment="0" attributes="0">
               <Component id="Tbl" min="-2" max="-2" attributes="0"/>
               <EmptySpace max="-2" attributes="0"/>
-              <Component id="View" pref="345" max="32767" attributes="0"/>
+              <Component id="View" pref="340" max="32767" attributes="0"/>
           </Group>
       </Group>
     </DimensionLayout>
@@ -44,6 +44,7 @@
   <SubComponents>
     <Container class="javax.swing.JToolBar" name="Tbl">
       <Properties>
+        <Property name="floatable" type="boolean" value="false"/>
         <Property name="rollover" type="boolean" value="true"/>
       </Properties>
 
@@ -51,10 +52,11 @@
       <SubComponents>
         <Component class="javax.swing.JButton" name="BtnPrv">
           <Properties>
+            <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
+              <Image iconType="3" name="/tts/gui/icons/previous.png"/>
+            </Property>
             <Property name="text" type="java.lang.String" value="&#x627;&#x644;&#x633;&#x627;&#x628;&#x642;"/>
             <Property name="focusable" type="boolean" value="false"/>
-            <Property name="horizontalTextPosition" type="int" value="0"/>
-            <Property name="verticalTextPosition" type="int" value="3"/>
           </Properties>
           <Events>
             <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="BtnPrvActionPerformed"/>
@@ -62,10 +64,11 @@
         </Component>
         <Component class="javax.swing.JButton" name="BtnNxt">
           <Properties>
+            <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
+              <Image iconType="3" name="/tts/gui/icons/next.png"/>
+            </Property>
             <Property name="text" type="java.lang.String" value="&#x627;&#x644;&#x62a;&#x627;&#x644;&#x64a;"/>
             <Property name="focusable" type="boolean" value="false"/>
-            <Property name="horizontalTextPosition" type="int" value="0"/>
-            <Property name="verticalTextPosition" type="int" value="3"/>
           </Properties>
           <Events>
             <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="BtnNxtActionPerformed"/>
@@ -73,10 +76,11 @@
         </Component>
         <Component class="javax.swing.JButton" name="BtnSet">
           <Properties>
+            <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
+              <Image iconType="3" name="/tts/gui/icons/settings.png"/>
+            </Property>
             <Property name="text" type="java.lang.String" value="&#x625;&#x639;&#x62f;&#x627;&#x62f;&#x627;&#x62a;"/>
             <Property name="focusable" type="boolean" value="false"/>
-            <Property name="horizontalTextPosition" type="int" value="0"/>
-            <Property name="verticalTextPosition" type="int" value="3"/>
           </Properties>
           <Events>
             <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="BtnSetActionPerformed"/>

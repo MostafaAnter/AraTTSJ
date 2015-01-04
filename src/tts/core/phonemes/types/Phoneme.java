@@ -36,7 +36,7 @@ public class Phoneme implements Cloneable {
     public String pitchString() {
         String res = "";
         for (Pitch Pitch1 : Pitch) {
-            res += Pitch1.toString();
+            res += Pitch1.toString() + " ";
         }
         return res;
     }

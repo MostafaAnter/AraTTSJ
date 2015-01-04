@@ -5,55 +5,38 @@
  */
 package tts.gui;
 
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.io.IOException;
+import java.awt.ComponentOrientation;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javax.sound.sampled.LineUnavailableException;
-import javax.sound.sampled.UnsupportedAudioFileException;
-import javax.swing.JDialog;
-import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
-import javax.swing.Timer;
 import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
-import javax.swing.filechooser.FileNameExtensionFilter;
-import tts.audioplayer.AudioPlayer;
 import tts.core.*;
 import tts.core.phonemes.types.Word;
 
 
-/**
- *
- * @author ossama
- */
 public class FrmMain extends javax.swing.JFrame {
 
-    TTSEngine tts;
-    Settings set = Settings.getSettings();
-    String AudioTarget = "";
-    AudioPlayer player = new AudioPlayer();
-    FrmText txt = new FrmText();
-    FrmVP vp = new FrmVP();
+    private final TTSEngine tts;
+    private final Settings set = Settings.getSettings();
+    private final FrmText txt = new FrmText();
+    private final FrmVP vp = new FrmVP();
+    private final FrmCreate crt = new FrmCreate();
+    private final FrmPlay play = new FrmPlay();
+    private int index = 0;
 
     /**
      * Creates new form FrmMain
      */
     public FrmMain() {
-        vp.setVisible(false);
-        initComponents();
-        tts = new TTSEngine();
-        View.setViewportView(txt);
-        Timer t = new Timer(1, new ActionListener() {
 
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                BtnNxt.setEnabled(!txt.getText().equals(""));
-                BtnPrv.setEnabled(vp.isVisible());
-            }
-        });
-        t.start();
+        initComponents();
+        vp.setVisible(false);
+        crt.setVisible(false);
+        Settings.setDirection(this, ComponentOrientation.RIGHT_TO_LEFT);
+        tts = TTSEngine.getTTSEngine();
+        View.setViewportView(txt);
+
     }
 
     /**
@@ -75,12 +58,12 @@ public class FrmMain extends javax.swing.JFrame {
         setTitle("AraTTS");
         setMinimumSize(new java.awt.Dimension(500, 350));
 
+        Tbl.setFloatable(false);
         Tbl.setRollover(true);
 
+        BtnPrv.setIcon(new javax.swing.ImageIcon(getClass().getResource("/tts/gui/icons/previous.png"))); // NOI18N
         BtnPrv.setText("السابق");
         BtnPrv.setFocusable(false);
-        BtnPrv.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
-        BtnPrv.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
         BtnPrv.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 BtnPrvActionPerformed(evt);
@@ -88,10 +71,9 @@ public class FrmMain extends javax.swing.JFrame {
         });
         Tbl.add(BtnPrv);
 
+        BtnNxt.setIcon(new javax.swing.ImageIcon(getClass().getResource("/tts/gui/icons/next.png"))); // NOI18N
         BtnNxt.setText("التالي");
         BtnNxt.setFocusable(false);
-        BtnNxt.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
-        BtnNxt.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
         BtnNxt.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 BtnNxtActionPerformed(evt);
@@ -99,10 +81,9 @@ public class FrmMain extends javax.swing.JFrame {
         });
         Tbl.add(BtnNxt);
 
+        BtnSet.setIcon(new javax.swing.ImageIcon(getClass().getResource("/tts/gui/icons/settings.png"))); // NOI18N
         BtnSet.setText("إعدادات");
         BtnSet.setFocusable(false);
-        BtnSet.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
-        BtnSet.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
         BtnSet.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 BtnSetActionPerformed(evt);
@@ -122,69 +103,77 @@ public class FrmMain extends javax.swing.JFrame {
             .addGroup(layout.createSequentialGroup()
                 .addComponent(Tbl, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(View, javax.swing.GroupLayout.DEFAULT_SIZE, 345, Short.MAX_VALUE))
+                .addComponent(View, javax.swing.GroupLayout.DEFAULT_SIZE, 340, Short.MAX_VALUE))
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
     private void BtnNxtActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_BtnNxtActionPerformed
-        if (txt.isVisible()) {
-            String text = txt.getText();
-            if (!text.equals("")) {
-                Word[] words = tts.convert(text);
-                if (words == null) {
-                    JOptionPane.showMessageDialog(this, "حدث الخطأ التالي أثناء التحويل :\n" + tts.getError(), "خطأ", JOptionPane.ERROR_MESSAGE);
-                } else {
-                    vp.setWords(words);
+        switch (index) {
+            case 0:
+                if (processText()) {
+                    index++;
                     txt.setVisible(false);
+                    vp.setWords(tts.getWords());
                     vp.setVisible(true);
                     View.setViewportView(vp);
                 }
-
+                break;
+            case 1: {
+                index++;
+                vp.setVisible(false);
+                crt.setVisible(true);
+                View.setViewportView(crt);
+                break;
             }
-        } else {
-            if (!tts.createAudio(Settings.getSettings().getMBROLA(),
-                    Settings.getSettings().getPhonemeDB(), "/home/ossama/Desktop/a.wav")) {
-                JOptionPane.showMessageDialog(this, "حدث الخطأ التالي أثناء التوليد :\n" + tts.getError(), "خطأ", JOptionPane.ERROR_MESSAGE);
-
-            } else {
-                AudioPlayer a = new AudioPlayer();
-                try {
-                    JDialog Save_Dlg = new JDialog(this, "الرجاء اختيار مسار  الحفط", true);
-                    String old_path = AudioTarget;
-                    if (!(old_path.equals("")) && old_path.lastIndexOf(System.getProperty("file.separator")) > 0) {
-                        System.out.println(old_path.lastIndexOf(System.getProperty("file.separator")));
-                        old_path = old_path.substring(0, old_path.lastIndexOf(System.getProperty("file.separator")));
-                    }
-                    JFileChooser choose = new JFileChooser(old_path);
-                    choose.setFileFilter(new FileNameExtensionFilter("Wave audio files (*.wav)", "wav"));
-                    choose.setDialogTitle("الرجاء اختيار مسار  الحفظ");
-                    int res = choose.showOpenDialog(Save_Dlg);
-                    if (res == JFileChooser.APPROVE_OPTION) {
-                        AudioTarget = choose.getSelectedFile().getAbsolutePath();
-                        if (!AudioTarget.toLowerCase().endsWith(".wav")) {
-                            AudioTarget = AudioTarget + ".wav";
-                        }
-                        tts.createAudio(Settings.getSettings().getMBROLA(), Settings.getSettings().getPhonemeDB(), AudioTarget);
-                        a.open(AudioTarget);
-                    }
-                } catch (UnsupportedAudioFileException ex) {
-                    Logger.getLogger(FrmMain.class.getName()).log(Level.SEVERE, null, ex);
-                } catch (IOException ex) {
-                    Logger.getLogger(FrmMain.class.getName()).log(Level.SEVERE, null, ex);
-                } catch (LineUnavailableException ex) {
-                    Logger.getLogger(FrmMain.class.getName()).log(Level.SEVERE, null, ex);
-                }
-                a.play();
+            case 2: {
+                index++;
+                crt.setVisible(false);
+                play.setVisible(true);
+                View.setViewportView(play);
+                break;
             }
         }
     }//GEN-LAST:event_BtnNxtActionPerformed
 
+    private boolean processText() {
+        String text = txt.getText();
+        if (text == null || text.trim().equals("")) {
+            JOptionPane.showMessageDialog(this, "لا يمكن أن يكون النص فارغاً", "خطأ", JOptionPane.ERROR_MESSAGE);
+            return false;
+        }
+        Word[] words = tts.convert(text);
+        if (words == null) {
+            JOptionPane.showMessageDialog(this, "حدث الخطأ التالي: \n" + tts.getError(), "خطأ", JOptionPane.ERROR_MESSAGE);
+            return false;
+        }
+        return true;
+    }
+
     private void BtnPrvActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_BtnPrvActionPerformed
-        txt.setVisible(true);
-        vp.setVisible(false);
-        View.setViewportView(txt);
+        switch (index) {
+            case 0:
+                break;
+            case 1:
+                txt.setVisible(true);
+                vp.setVisible(false);
+                View.setViewportView(txt);
+                index--;
+                break;
+            case 2:
+                vp.setVisible(true);
+                crt.setVisible(false);
+                View.setViewportView(vp);
+                index--;
+                break;
+            case 3:
+                crt.setVisible(true);
+                play.setVisible(false);
+                View.setViewportView(crt);
+                index--;
+                break;
+        }
     }//GEN-LAST:event_BtnPrvActionPerformed
 
     private void BtnSetActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_BtnSetActionPerformed
@@ -203,18 +192,13 @@ public class FrmMain extends javax.swing.JFrame {
              * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html
              */
             UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());        //</editor-fold>
-        } catch (ClassNotFoundException ex) {
-            Logger.getLogger(FrmMain.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (InstantiationException ex) {
-            Logger.getLogger(FrmMain.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (IllegalAccessException ex) {
-            Logger.getLogger(FrmMain.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (UnsupportedLookAndFeelException ex) {
+        } catch (ClassNotFoundException | InstantiationException | IllegalAccessException | UnsupportedLookAndFeelException ex) {
             Logger.getLogger(FrmMain.class.getName()).log(Level.SEVERE, null, ex);
         }
 
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
+            @Override
             public void run() {
                 new FrmMain().setVisible(true);
             }

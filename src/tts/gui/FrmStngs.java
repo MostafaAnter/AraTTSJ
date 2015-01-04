@@ -5,13 +5,11 @@
  */
 package tts.gui;
 
+import java.awt.ComponentOrientation;
 import javax.swing.JDialog;
 import javax.swing.JFileChooser;
 
-/**
- *
- * @author ossama
- */
+
 public class FrmStngs extends javax.swing.JDialog {
 
     Settings set;
@@ -22,6 +20,9 @@ public class FrmStngs extends javax.swing.JDialog {
     public FrmStngs(java.awt.Frame parent, boolean modal) {
         set = Settings.getSettings();
         initComponents();
+        Settings.setDirection(this, ComponentOrientation.RIGHT_TO_LEFT);
+        TxtMbrola.setComponentOrientation(ComponentOrientation.LEFT_TO_RIGHT);
+        TxtPhoneme.setComponentOrientation(ComponentOrientation.LEFT_TO_RIGHT);
         TxtMbrola.setText(set.getMBROLA());
         TxtPhoneme.setText(set.getPhonemeDB());
     }
@@ -45,10 +46,11 @@ public class FrmStngs extends javax.swing.JDialog {
         BtnOK = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
+        setTitle("إعدادات");
 
         LblMbrola.setText("مسار برنامج MBROLA :");
 
-        BtnBrwsMBROLA.setText("...");
+        BtnBrwsMBROLA.setIcon(new javax.swing.ImageIcon(getClass().getResource("/tts/gui/icons/browse.png"))); // NOI18N
         BtnBrwsMBROLA.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 BtnBrwsMBROLAActionPerformed(evt);
@@ -57,13 +59,14 @@ public class FrmStngs extends javax.swing.JDialog {
 
         LblPhoneme.setText("مسار قاعدة المقاطع الصوتية :");
 
-        BtnBrwsPhoneme.setText("...");
+        BtnBrwsPhoneme.setIcon(new javax.swing.ImageIcon(getClass().getResource("/tts/gui/icons/browse.png"))); // NOI18N
         BtnBrwsPhoneme.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 BtnBrwsPhonemeActionPerformed(evt);
             }
         });
 
+        BtnCncl.setIcon(new javax.swing.ImageIcon(getClass().getResource("/tts/gui/icons/cancel.png"))); // NOI18N
         BtnCncl.setText("إلغاء الأمر");
         BtnCncl.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -71,6 +74,7 @@ public class FrmStngs extends javax.swing.JDialog {
             }
         });
 
+        BtnOK.setIcon(new javax.swing.ImageIcon(getClass().getResource("/tts/gui/icons/okay.png"))); // NOI18N
         BtnOK.setText("حفظ");
         BtnOK.setToolTipText("");
         BtnOK.addActionListener(new java.awt.event.ActionListener() {
@@ -87,22 +91,22 @@ public class FrmStngs extends javax.swing.JDialog {
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
-                        .addComponent(TxtMbrola)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(BtnBrwsMBROLA, javax.swing.GroupLayout.PREFERRED_SIZE, 27, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(layout.createSequentialGroup()
-                        .addComponent(TxtPhoneme)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(BtnBrwsPhoneme, javax.swing.GroupLayout.PREFERRED_SIZE, 27, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(LblMbrola)
                             .addComponent(LblPhoneme))
                         .addGap(0, 190, Short.MAX_VALUE))
                     .addGroup(layout.createSequentialGroup()
-                        .addComponent(BtnOK, javax.swing.GroupLayout.PREFERRED_SIZE, 67, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(BtnOK)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(BtnCncl)))
+                        .addComponent(BtnCncl))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(TxtPhoneme)
+                            .addComponent(TxtMbrola))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(BtnBrwsPhoneme, javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addComponent(BtnBrwsMBROLA, javax.swing.GroupLayout.Alignment.TRAILING))))
                 .addContainerGap())
         );
         layout.setVerticalGroup(
@@ -111,13 +115,13 @@ public class FrmStngs extends javax.swing.JDialog {
                 .addContainerGap()
                 .addComponent(LblMbrola)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(TxtMbrola, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(BtnBrwsMBROLA))
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
+                    .addComponent(BtnBrwsMBROLA)
+                    .addComponent(TxtMbrola, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(LblPhoneme)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
                     .addComponent(TxtPhoneme, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(BtnBrwsPhoneme))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)

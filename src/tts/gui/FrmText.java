@@ -5,10 +5,9 @@
  */
 package tts.gui;
 
-/**
- *
- * @author ossama
- */
+import java.awt.ComponentOrientation;
+
+
 public class FrmText extends javax.swing.JPanel {
 
     /**
@@ -16,6 +15,7 @@ public class FrmText extends javax.swing.JPanel {
      */
     public FrmText() {
         initComponents();
+           Settings.setDirection(this, ComponentOrientation.RIGHT_TO_LEFT);
     }
 
     public String getText() {

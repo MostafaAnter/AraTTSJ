@@ -109,6 +109,7 @@ public class PreProcesser {
         //إلغاء الأسطر الفارغة من النص
         text = text.replaceAll(EMPTY_LINES, EMPTY_LINES_REPLACER);
         //إلغاء السطور من النص
+
         text = text.replaceAll("\n", ".");
         //ضبط الفراغات بحيث يصبح لدينا فراغ واحد فقط بين الكلمات
         text = text.replaceAll(REPEATED_SPACES, " ");
@@ -150,6 +151,8 @@ public class PreProcesser {
             if (previous != null) {
                 if (isNotAWord(current)) {
                     words.get(words.size() - 1).setEnd(EndType.charToEnd(current.charAt(0)));
+                    //خطأ تم إصلاحه
+                    previous = current;
                     continue;
                 }
             }

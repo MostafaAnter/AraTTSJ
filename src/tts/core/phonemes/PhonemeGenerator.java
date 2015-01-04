@@ -156,6 +156,7 @@ public class PhonemeGenerator {
             for (int j = 0; j < word.getVocal().length(); j++) {
                 if (PhonemeDB.containsKey(word.getVocal().charAt(j))) {
                     //دمج الفتحات المتتالية بفتحة واحدة زمنها هو مجموع أزمنة هذه الفتحات
+                    
                     if (isFathah(word.getVocal().charAt(j))) {
                         j = handleFathah(j, word.getVocal(), res);
                     } else {
@@ -168,6 +169,7 @@ public class PhonemeGenerator {
                 }
             }
             //معالجة الأحرف الخاصة
+            
             handleSpecialLetters(res);
             //معالجة نهاية الكلمة في حال كانت علامة ترقيم
             char end = EndType.EndToChar(word.getEnd());

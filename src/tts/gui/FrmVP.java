@@ -5,13 +5,11 @@
  */
 package tts.gui;
 
+import java.awt.ComponentOrientation;
 import javax.swing.table.DefaultTableModel;
 import tts.core.phonemes.types.Word;
 
-/**
- *
- * @author ossama
- */
+
 public class FrmVP extends javax.swing.JPanel {
 
     /**
@@ -19,6 +17,7 @@ public class FrmVP extends javax.swing.JPanel {
      */
     public FrmVP() {
         initComponents();
+           Settings.setDirection(this, ComponentOrientation.RIGHT_TO_LEFT);
     }
 
     public void setWords(Word[] words) {

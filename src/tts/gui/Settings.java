@@ -1,11 +1,15 @@
 package tts.gui;
 
+import java.awt.Component;
+import java.awt.ComponentOrientation;
+import java.awt.Container;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.Properties;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.swing.JScrollPane;
 
 /**
  *
@@ -32,7 +36,7 @@ public class Settings {
             in = new FileInputStream("set.conf");
             //تحميل الإعدادات
             props.load(in);
-            out = new FileOutputStream("set.conf",true);
+            out = new FileOutputStream("set.conf", true);
 
         } catch (IOException ex) {
             Logger.getLogger(Settings.class.getName()).log(Level.SEVERE, null, ex);
@@ -89,5 +93,21 @@ public class Settings {
             set = new Settings();
         }
         return set;
+    }
+
+    public static void setDirection(Container P, ComponentOrientation o) {
+        if (!(P instanceof JScrollPane)) {
+            P.setComponentOrientation(o);
+        }
+
+        for (Component c : P.getComponents()) {
+            if (c instanceof Container) {
+                setDirection((Container) c, o);
+
+            }
+            if (!(c instanceof Container)) {
+                c.setComponentOrientation(o);
+            }
+        }
     }
 }
