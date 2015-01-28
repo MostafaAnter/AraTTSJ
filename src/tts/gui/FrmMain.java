@@ -14,7 +14,6 @@ import javax.swing.UnsupportedLookAndFeelException;
 import tts.core.*;
 import tts.core.phonemes.types.Word;
 
-
 public class FrmMain extends javax.swing.JFrame {
 
     private final TTSEngine tts;
@@ -128,11 +127,14 @@ public class FrmMain extends javax.swing.JFrame {
                 break;
             }
             case 2: {
-                index++;
-                crt.setVisible(false);
-                play.setVisible(true);
-                View.setViewportView(play);
-                break;
+                if (!crt.getPath().equals("") && play.setFile(crt.getPath())) {
+
+                    index++;
+                    crt.setVisible(false);
+                    play.setVisible(true);
+                    View.setViewportView(play);
+                    break;
+                }
             }
         }
     }//GEN-LAST:event_BtnNxtActionPerformed
@@ -185,6 +187,7 @@ public class FrmMain extends javax.swing.JFrame {
      * @param args the command line arguments
      */
     public static void main(String args[]) {
+        Settings.loadFonts();
         try {
             /* Set the Nimbus look and feel */
             //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">

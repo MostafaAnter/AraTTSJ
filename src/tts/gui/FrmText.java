@@ -6,18 +6,33 @@
 package tts.gui;
 
 import java.awt.ComponentOrientation;
-
+import java.awt.Font;
+import java.awt.Toolkit;
+import java.awt.datatransfer.Clipboard;
+import java.awt.datatransfer.ClipboardOwner;
+import java.awt.datatransfer.DataFlavor;
+import java.awt.datatransfer.StringSelection;
+import java.awt.datatransfer.Transferable;
+import java.awt.datatransfer.UnsupportedFlavorException;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import java.io.IOException;
+import javax.swing.JComponent;
+import javax.swing.JPopupMenu;
 
 public class FrmText extends javax.swing.JPanel {
+    
+    private Clipboard c;
 
     /**
      * Creates new form FrmText
      */
     public FrmText() {
+        c = Toolkit.getDefaultToolkit().getSystemClipboard();
         initComponents();
-           Settings.setDirection(this, ComponentOrientation.RIGHT_TO_LEFT);
+        Settings.setDirection(this, ComponentOrientation.RIGHT_TO_LEFT);
     }
-
+    
     public String getText() {
         return TxtNormal.getText();
     }
@@ -31,12 +46,55 @@ public class FrmText extends javax.swing.JPanel {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
+        MnuPop = new javax.swing.JPopupMenu();
+        MnuCut = new javax.swing.JMenuItem();
+        MnuCopy = new javax.swing.JMenuItem();
+        MnuPaste = new javax.swing.JMenuItem();
         SPLNormal = new javax.swing.JScrollPane();
         TxtNormal = new javax.swing.JTextArea();
 
+        MnuCut.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_X, java.awt.event.InputEvent.CTRL_MASK));
+        MnuCut.setText("قص");
+        MnuCut.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                MnuCutActionPerformed(evt);
+            }
+        });
+        MnuPop.add(MnuCut);
+
+        MnuCopy.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_C, java.awt.event.InputEvent.CTRL_MASK));
+        MnuCopy.setText("نسخ");
+        MnuCopy.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                MnuCopyActionPerformed(evt);
+            }
+        });
+        MnuPop.add(MnuCopy);
+
+        MnuPaste.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_Y, java.awt.event.InputEvent.CTRL_MASK));
+        MnuPaste.setText("لصق");
+        MnuPaste.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                MnuPasteActionPerformed(evt);
+            }
+        });
+        MnuPop.add(MnuPaste);
+
+        SPLNormal.setHorizontalScrollBarPolicy(javax.swing.ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
+
         TxtNormal.setColumns(20);
-        TxtNormal.setFont(new java.awt.Font("Traditional Arabic", 0, 24)); // NOI18N
+        TxtNormal.add(MnuPop);
+        TxtNormal.addMouseListener(new PopupTriggerMouseListener(MnuPop, TxtNormal));
+        TxtNormal.setFont(new java.awt.Font("Droid Arabic Naskh", 0, 36)); // NOI18N
         TxtNormal.setRows(5);
+        TxtNormal.setToolTipText("");
+        TxtNormal.setWrapStyleWord(true);
+        TxtNormal.setMargin(new java.awt.Insets(10, 10, 10, 10));
+        TxtNormal.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                TxtNormalKeyPressed(evt);
+            }
+        });
         SPLNormal.setViewportView(TxtNormal);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
@@ -51,9 +109,78 @@ public class FrmText extends javax.swing.JPanel {
         );
     }// </editor-fold>//GEN-END:initComponents
 
+    private void TxtNormalKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_TxtNormalKeyPressed
+
+    }//GEN-LAST:event_TxtNormalKeyPressed
+
+    private void MnuCutActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_MnuCutActionPerformed
+        c.setContents(new StringSelection(TxtNormal.getText()), null);
+        TxtNormal.setText("");
+    }//GEN-LAST:event_MnuCutActionPerformed
+
+    private void MnuCopyActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_MnuCopyActionPerformed
+        c.setContents(new StringSelection(TxtNormal.getText()), null);
+    }//GEN-LAST:event_MnuCopyActionPerformed
+
+    private void MnuPasteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_MnuPasteActionPerformed
+        String result = "";
+        c = Toolkit.getDefaultToolkit().getSystemClipboard();
+        //odd: the Object param of getContents is not currently used
+        Transferable contents = c.getContents(null);
+        boolean hasTransferableText
+                = (contents != null)
+                && contents.isDataFlavorSupported(DataFlavor.stringFlavor);
+        if (hasTransferableText) {
+            try {
+                result = (String) contents.getTransferData(DataFlavor.stringFlavor);
+            } catch (UnsupportedFlavorException | IOException ex) {
+                System.out.println(ex);
+                ex.printStackTrace();
+            }
+        }
+        TxtNormal.setText(result);
+    }//GEN-LAST:event_MnuPasteActionPerformed
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JMenuItem MnuCopy;
+    private javax.swing.JMenuItem MnuCut;
+    private javax.swing.JMenuItem MnuPaste;
+    private javax.swing.JPopupMenu MnuPop;
     private javax.swing.JScrollPane SPLNormal;
     private javax.swing.JTextArea TxtNormal;
     // End of variables declaration//GEN-END:variables
+ public static class PopupTriggerMouseListener extends MouseAdapter {
+        
+        private JPopupMenu popup;
+        private JComponent component;
+        
+        public PopupTriggerMouseListener(JPopupMenu popup, JComponent component) {
+            this.popup = popup;
+            this.component = component;
+        }
+
+        //some systems trigger popup on mouse press, others on mouse release, we want to cater for both
+        private void showMenuIfPopupTrigger(MouseEvent e) {
+            if (e.isPopupTrigger()) {
+                popup.show(component, e.getX() + 3, e.getY() + 3);
+            }
+        }
+
+        //according to the javadocs on isPopupTrigger, checking for popup trigger on mousePressed and mouseReleased
+        //should be all  that is required
+        //public void mouseClicked(MouseEvent e)  
+        //{
+        //    showMenuIfPopupTrigger(e);
+        //}
+        public void mousePressed(MouseEvent e) {
+            showMenuIfPopupTrigger(e);
+        }
+        
+        public void mouseReleased(MouseEvent e) {
+            showMenuIfPopupTrigger(e);
+        }
+        
+    }
+    
 }

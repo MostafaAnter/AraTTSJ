@@ -3,6 +3,10 @@ package tts.gui;
 import java.awt.Component;
 import java.awt.ComponentOrientation;
 import java.awt.Container;
+import java.awt.Font;
+import java.awt.FontFormatException;
+import java.awt.GraphicsEnvironment;
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -82,6 +86,20 @@ public class Settings {
             props.store(out, "");
         } catch (IOException ex) {
             Logger.getLogger(Settings.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+
+    /**
+     * تحميل الخط الخاص المستخدم للكتابة
+     */
+    public static void loadFonts() {
+        try {
+            GraphicsEnvironment.getLocalGraphicsEnvironment().registerFont(
+                    Font.createFont(Font.TRUETYPE_FONT, new File("resources/fonts/DroidNaskh-Bold.ttf")));
+            GraphicsEnvironment.getLocalGraphicsEnvironment().registerFont(
+                    Font.createFont(Font.TRUETYPE_FONT, new File("resources/fonts/DroidNaskh-Regular.ttf")));
+        } catch (FontFormatException | IOException e) {
+            System.out.println(e.getMessage());
         }
     }
 

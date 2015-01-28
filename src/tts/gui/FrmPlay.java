@@ -6,17 +6,22 @@
 package tts.gui;
 
 import java.awt.ComponentOrientation;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.io.IOException;
 import javax.sound.sampled.LineUnavailableException;
 import javax.sound.sampled.UnsupportedAudioFileException;
+import javax.swing.ImageIcon;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
+import javax.swing.Timer;
 import tts.audioplayer.AudioPlayer;
 
 public class FrmPlay extends javax.swing.JPanel {
-    
+
     private String AudioFile = "";
     private final AudioPlayer audio;
+    private Timer t;
 
     /**
      * Creates new form FrmPlay
@@ -25,13 +30,32 @@ public class FrmPlay extends javax.swing.JPanel {
         initComponents();
         Settings.setDirection(this, ComponentOrientation.RIGHT_TO_LEFT);
         audio = new AudioPlayer();
+        t = new Timer(1, new ActionListener() {
+
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                switch (audio.getState()) {
+                    case AudioPlayer.STATE_PAUSED:
+                    case AudioPlayer.STATE_READY:
+                        BtnPP.setIcon(play);
+                    case AudioPlayer.STATE_PLAYING:
+                        BtnPP.setIcon(pause);
+                }
+                if (audio.getState() == AudioPlayer.STATE_PLAYING) {
+                    SclBrPos.setValue((int) (audio.getCurrnetTime() * 100 / audio.getTotalTime()));
+                }
+            }
+        }
+        );
     }
-    
-    public void setFile(String file) {
+
+    public boolean setFile(String file) {
         try {
             audio.open(file);
+            return true;
         } catch (UnsupportedAudioFileException | IOException | LineUnavailableException ex) {
             JOptionPane.showMessageDialog((JFrame) null, "حدث الخطأ التالي : \n" + ex.getLocalizedMessage(), "خطأ", JOptionPane.ERROR_MESSAGE);
+            return false;
         }
     }
 
@@ -45,17 +69,27 @@ public class FrmPlay extends javax.swing.JPanel {
     private void initComponents() {
 
         PnlTop = new javax.swing.JPanel();
-        BtnPP = new javax.swing.JButton();
         BtnS = new javax.swing.JButton();
+        BtnPP = new javax.swing.JButton();
         SclBrPos = new javax.swing.JScrollBar();
         LblTotal = new javax.swing.JLabel();
         LblCurrent = new javax.swing.JLabel();
 
-        BtnPP.setText("jButton1");
-        PnlTop.add(BtnPP);
-
-        BtnS.setText("jButton2");
+        BtnS.setIcon(new javax.swing.ImageIcon(getClass().getResource("/tts/gui/icons/stop.png"))); // NOI18N
+        BtnS.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                BtnSActionPerformed(evt);
+            }
+        });
         PnlTop.add(BtnS);
+
+        BtnPP.setIcon(play);
+        BtnPP.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                BtnPPActionPerformed(evt);
+            }
+        });
+        PnlTop.add(BtnPP);
 
         SclBrPos.setOrientation(javax.swing.JScrollBar.HORIZONTAL);
         SclBrPos.setBorder(null);
@@ -82,7 +116,6 @@ public class FrmPlay extends javax.swing.JPanel {
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addComponent(PnlTop, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                         .addComponent(SclBrPos, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -90,10 +123,33 @@ public class FrmPlay extends javax.swing.JPanel {
                     .addGroup(layout.createSequentialGroup()
                         .addGap(2, 2, 2)
                         .addComponent(LblCurrent)))
-                .addContainerGap(228, Short.MAX_VALUE))
+                .addContainerGap(223, Short.MAX_VALUE))
         );
     }// </editor-fold>//GEN-END:initComponents
 
+    private void BtnPPActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_BtnPPActionPerformed
+        switch (audio.getState()) {
+            case AudioPlayer.STATE_PAUSED:
+            case AudioPlayer.STATE_READY:
+                audio.play();
+                t.start();
+                break;
+            case AudioPlayer.STATE_PLAYING:
+                audio.pause();
+                t.stop();
+                break;
+        }
+    }//GEN-LAST:event_BtnPPActionPerformed
+
+    private void BtnSActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_BtnSActionPerformed
+        audio.stop();
+    	t.stop();
+        BtnPP.setIcon(play);
+
+    }//GEN-LAST:event_BtnSActionPerformed
+
+    ImageIcon play = new ImageIcon(getClass().getResource("/tts/gui/icons/play.png"));
+    ImageIcon pause = new ImageIcon(getClass().getResource("/tts/gui/icons/pause.png"));
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton BtnPP;

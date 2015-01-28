@@ -14,10 +14,10 @@ import javax.swing.JOptionPane;
 import javax.swing.filechooser.FileFilter;
 import tts.core.TTSEngine;
 
-
 public class FrmCreate extends javax.swing.JPanel {
-    
+
     TTSEngine tts = TTSEngine.getTTSEngine();
+    private String path;
 
     /**
      * Creates new form FrmCreate
@@ -105,11 +105,13 @@ public class FrmCreate extends javax.swing.JPanel {
     private void BtnGoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_BtnGoActionPerformed
         PrgWrk.setIndeterminate(true);
         Thread th = new Thread(new Runnable() {
-            
+
             @Override
             public void run() {
                 if (tts.createAudio(Settings.getSettings().getMBROLA(), Settings.getSettings().getPhonemeDB(), TxtPth.getText(), ChkTrans.isSelected())) {
-                    JOptionPane.showMessageDialog(FrmCreate.this, "تمت العملية بنجاح", "رسالة", JOptionPane.INFORMATION_MESSAGE);
+                    path = TxtPth.getText();
+                    JOptionPane
+                            .showMessageDialog(FrmCreate.this, "تمت العملية بنجاح", "رسالة", JOptionPane.INFORMATION_MESSAGE);
                 } else {
                     JOptionPane.showMessageDialog(FrmCreate.this, "حدث الخطأ التالي أثناء التوليد :\n" + tts.getError(), "خطأ", JOptionPane.ERROR_MESSAGE);
                 }
@@ -122,16 +124,16 @@ public class FrmCreate extends javax.swing.JPanel {
 
     private void BtnBrwsActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_BtnBrwsActionPerformed
         JDialog Mbrola_Select = new JDialog((JFrame) null, "الرجاء اختيار مسار الحفظ", true);
-        
+
         JFileChooser choose = new JFileChooser();
         choose.setDialogTitle("الرجاء اختيار مسار الحفظ");
         choose.setFileFilter(new FileFilter() {
-            
+
             @Override
             public boolean accept(File f) {
                 return f.isDirectory() || f.getName().toLowerCase().endsWith(".wav");
             }
-            
+
             @Override
             public String getDescription() {
                 return "WAV Audop files(*.wav)";
@@ -147,7 +149,9 @@ public class FrmCreate extends javax.swing.JPanel {
         }
     }//GEN-LAST:event_BtnBrwsActionPerformed
 
-
+    public String getPath() {
+        return path;
+    }
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton BtnBrws;
     private javax.swing.JButton BtnGo;
