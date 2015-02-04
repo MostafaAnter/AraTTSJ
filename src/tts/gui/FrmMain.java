@@ -21,7 +21,6 @@ public class FrmMain extends javax.swing.JFrame {
     private final FrmText txt = new FrmText();
     private final FrmVP vp = new FrmVP();
     private final FrmCreate crt = new FrmCreate();
-    private final FrmPlay play = new FrmPlay();
     private int index = 0;
 
     /**
@@ -126,16 +125,7 @@ public class FrmMain extends javax.swing.JFrame {
                 View.setViewportView(crt);
                 break;
             }
-            case 2: {
-                if (!crt.getPath().equals("") && play.setFile(crt.getPath())) {
 
-                    index++;
-                    crt.setVisible(false);
-                    play.setVisible(true);
-                    View.setViewportView(play);
-                    break;
-                }
-            }
         }
     }//GEN-LAST:event_BtnNxtActionPerformed
 
@@ -169,12 +159,7 @@ public class FrmMain extends javax.swing.JFrame {
                 View.setViewportView(vp);
                 index--;
                 break;
-            case 3:
-                crt.setVisible(true);
-                play.setVisible(false);
-                View.setViewportView(crt);
-                index--;
-                break;
+
         }
     }//GEN-LAST:event_BtnPrvActionPerformed
 
