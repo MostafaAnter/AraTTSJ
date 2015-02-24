@@ -29,28 +29,10 @@ public class PhonemeGenerator {
     /**
      * جدول التحويل
      */
-    private final Map<Character, Phoneme> PhonemeDB = new HashMap<>();
+    private static final Map<Character, Phoneme> PhonemeDB = new HashMap<>();
 
-    /**
-     * يقوم هذا التابع بتهيئة جدول التحويل و يتسعدعى قبل استخدام الصف لأول مرة
-     * فقط
-     */
-    public void initializeGenerator() {
-        try {
-            //القراءة من ملف قاعدة البيانات
-            String DBPath = "PhonemeDB.txt";
-            Scanner in = new Scanner(new FileInputStream(DBPath));
-            in.nextLine();
-            while (in.hasNext()) {
-                String tmp = in.nextLine();
-                String[] data = tmp.split("\\$");
-                //تخزين الرموز في القاعدة
-                PhonemeDB.put(data[0].charAt(0), new Phoneme(data[1], Integer.parseInt(data[2])));
-            }
-        } catch (FileNotFoundException ex) {
-            Logger.getLogger(PhonemeGenerator.class.getName()).log(Level.SEVERE, null, ex);
-            System.exit(1);
-        }
+    public static Map<Character, Phoneme> getPhonemeDB() {
+        return PhonemeDB;
     }
 
     //التحقق من الحروف ذات المقاطع الخاصة (ص،ض،ط،ظ(
@@ -63,40 +45,6 @@ public class PhonemeGenerator {
                 );
     }
 
-    //هل الحركة هي فتحة
-    private boolean isFathah(char Letter) {
-        return (Letter == ArabicMoves.FATHAH)
-                || (Letter == PhonemeDB.get(ArabicMoves.FATHAH).getPhoneme().charAt(0));
-    }
-
-    //هل الحركة هي ضمة
-    private boolean isDammah(char Letter) {
-        return (Letter == ArabicMoves.DAMMAH)
-                || (Letter == PhonemeDB.get(ArabicMoves.DAMMAH).getPhoneme().charAt(0));
-    }
-
-    //هل الحركة هي كسرة 
-    private boolean isKasrah(char Letter) {
-        return (Letter == ArabicMoves.KASRAH)
-                || (Letter == PhonemeDB.get(ArabicMoves.KASRAH).getPhoneme().charAt(0));
-    }
-
-    //هل الحركة هي حركة عادية
-    private boolean isMove(char Letter) {
-        return isFathah(Letter)
-                || isDammah(Letter)
-                || isKasrah(Letter);
-    }
-
-    private boolean isPunctuationMark(char letter) {
-        return (letter == ArabicMoves.QUESTION_MARK)
-                || (letter == ArabicMoves.EXLAMATION_MARK)
-                || (letter == ArabicMoves.DOT)
-                || (letter == ArabicMoves.COMMA)
-                || (letter == ArabicMoves.SAY_DOTS)
-                || (letter == ArabicMoves.SEMICOLON);
-
-    }
 
     /**
      * معالجة الأحرف الخاصة.
@@ -111,7 +59,7 @@ public class PhonemeGenerator {
             //معالجة الحروف الخاصة
             if (i < phonemes.size() - 1 && isSpecialLetter(phonemes.get(i).getPhoneme())) {
                 Phoneme p = phonemes.get(i + 1);
-                if (isMove(p.getPhoneme().charAt(0))) {
+                if (ArabicMoves.isMove(p.getPhoneme().charAt(0))) {
                     p.setPhoneme(p.getPhoneme() + ".");
                 }
             }
@@ -133,7 +81,7 @@ public class PhonemeGenerator {
     private int handleFathah(int FathahIndex, String text, List<Phoneme> res) {
         int k = 1;
         //عد الفتحات المتتالية
-        while (k + FathahIndex < text.length() && isFathah(text.charAt(k + FathahIndex))) {
+        while (k + FathahIndex < text.length() && ArabicMoves.isFathah(text.charAt(k + FathahIndex))) {
             k++;
         }
         Phoneme fatha = (Phoneme) PhonemeDB.get(ArabicMoves.FATHAH).clone();
@@ -156,8 +104,8 @@ public class PhonemeGenerator {
             for (int j = 0; j < word.getVocal().length(); j++) {
                 if (PhonemeDB.containsKey(word.getVocal().charAt(j))) {
                     //دمج الفتحات المتتالية بفتحة واحدة زمنها هو مجموع أزمنة هذه الفتحات
-                    
-                    if (isFathah(word.getVocal().charAt(j))) {
+
+                    if (ArabicMoves.isFathah(word.getVocal().charAt(j))) {
                         j = handleFathah(j, word.getVocal(), res);
                     } else {
                         //قراءة الحروف و التحويل لمقاطع صوتية
@@ -169,11 +117,11 @@ public class PhonemeGenerator {
                 }
             }
             //معالجة الأحرف الخاصة
-            
+
             handleSpecialLetters(res);
             //معالجة نهاية الكلمة في حال كانت علامة ترقيم
             char end = EndType.EndToChar(word.getEnd());
-            if (isPunctuationMark(end)) {
+            if (ArabicMoves.isPunctuationMark(end)) {
                 res.add((Phoneme) PhonemeDB.get(end).clone());
             }
         }

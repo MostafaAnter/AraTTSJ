@@ -9,9 +9,15 @@ import tts.core.phonemes.types.Phoneme;
 import tts.core.phonemes.PhonemeGenerator;
 import tts.core.preprocess.PreProcesser;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.Scanner;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import tts.core.expertsystem.ExpertOptimzer;
+import tts.core.phonemes.types.EndType;
 import tts.core.phonemes.types.Word;
 
 /**
@@ -22,6 +28,7 @@ public class TTSEngine {
 
     private final PreProcesser pre;
     private final PhonemeGenerator gen;
+    private final ExpertOptimzer es;
     private Word[] words;
     private String error;
     int index = 0;
@@ -32,7 +39,28 @@ public class TTSEngine {
     private TTSEngine() {
         pre = new PreProcesser();
         gen = new PhonemeGenerator();
-        gen.initializeGenerator();
+        initializeTables();
+        es = new ExpertOptimzer("time.fcl");
+    }
+
+    //تم نقلها من الصف PhonemeGenerator من أجل النظام الخبير
+    private void initializeTables() {
+        try {
+            //القراءة من ملف قاعدة البيانات
+            String DBPath = "PhonemeDB.txt";
+            Scanner in = new Scanner(new FileInputStream(DBPath));
+            in.nextLine();
+            while (in.hasNext()) {
+                String tmp = in.nextLine();
+                String[] data = tmp.split("\\$");
+                //تخزين الرموز في القاعدة
+                PhonemeGenerator.getPhonemeDB().put(data[0].charAt(0), new Phoneme(data[1], Integer.parseInt(data[2])));
+                ExpertOptimzer.getPhonemeInts().put(data[1], Integer.parseInt(data[3]));
+            }
+        } catch (FileNotFoundException ex) {
+            Logger.getLogger(PhonemeGenerator.class.getName()).log(Level.SEVERE, null, ex);
+            System.exit(1);
+        }
     }
 
     /**
@@ -47,11 +75,31 @@ public class TTSEngine {
         try {
             words = pre.preProcess(text);
             words = gen.generatePhoneme(words);
+            for (int i = 0; i < words.length; i++) {
+                for (Phoneme phoneme : words[i].getPhonemes()) {
+                    //هل الفونيم مقطع نظامي و ليس فراغ؟
+                    //هل الفونيم حرف ؟
+                    //هل هو حركة تنوب عن همزة ؟
+                    //هل هو فتحة تنوب عن ألف
+                    //في حال تححق أحد هذه الشروط مرره للنظام الخبير
+                    if (validPhoneme(phoneme, i)) {
+                        es.optimizeTime(phoneme);
+                    }
+                }
+            }
             return words;
         } catch (Exception e) {
             error = e.getMessage();
         }
         return null;
+    }
+
+    private boolean validPhoneme(Phoneme phoneme, int i) {
+        return !phoneme.getPhoneme().equals("_")
+                && (!ArabicMoves.isMove(phoneme.getPhoneme().charAt(0))
+                || (ArabicMoves.isMove(phoneme.getPhoneme().charAt(0))
+                && (i == 0 || (EndType.isEndOfSenctence(words[i-1].getEnd()))))
+                || (ArabicMoves.isFathah(phoneme.getPhoneme().charAt(0)) && phoneme.getTime() > 50));
     }
 
     /**
@@ -96,7 +144,7 @@ public class TTSEngine {
         File trans = new File(Target.replace(".wav", ".txt"));
         if (trans.exists()) {
             trans.delete();
-            
+
         }
         StringBuilder build = new StringBuilder();
         for (Word word : words) {

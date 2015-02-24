@@ -15,64 +15,52 @@ public enum EndType {
     /**
      * الفراغ
      */
-    Space,
+    Space("فراغ"),
     /**
      * الفاصلة
      */
-    Comma,
+    Comma("فاصلة"),
     /**
-     *النقطة
+     * النقطة
      */
-    Dot,
+    Dot("نقطة"),
     /**
-     *نقطا القول  (:)
+     * نقطا القول (:)
      */
-    SayDots,
+    SayDots("نقطتا القول"),
     /**
-     *الفاصلة المنقوطة
+     * الفاصلة المنقوطة
      */
-    SemiColon,
+    SemiColon("فاصلة منقوطة"),
     /**
-     *علامة الاستفهام
+     * علامة الاستفهام
      */
-    QuestionMark,
+    QuestionMark("إشارة استفهام"),
     /**
      * علامة التعجب
      */
-    ExeclamationMark,
+    ExeclamationMark("إشارة تعجب"),
     /**
      * نهاية البيانات
      */
-    EndOfData;
+    EndOfData("نهاية البيانات");
+
+    private String name;
+
+    private EndType(String name) {
+        this.name = name;
+    }
 
     @Override
     public String toString() {
-        switch (ordinal()) {
-            case 0:
-                return "فراغ";
-            case 1:
-                return "فاصلة";
-            case 2:
-                return "نقطة";
-            case 3:
-                return "نقط القول (:)";
-            case 4:
-                return "فاصلة منقوطة";
-            case 5:
-                return "إشارة استفهام";
-            case 6:
-                return "إشارة تعجب";
-            case 7:
-                return "نهاية البيانات";
-            default:
-                return "";
-        }
+        return name;
     }
 
     /**
      * يقوم بقراءة المحرف و توليد النهاية المناسبة
+     *
      * @param c محرف نهاية الكلمة
-     * @return النهاية الموافقة 
+     * @return النهاية الموافقة
      */
     public static EndType charToEnd(char c) {
         switch (c) {
@@ -97,8 +85,10 @@ public enum EndType {
 
     /**
      * يقوم بتحويل النهاية للمحرف الموافق
+     *
      * @param end نهاية الكلمة
-     * @return المحرف الموافق و يعيد القيمة "\0" في حال كانت النهاية هي نهاية البيانات
+     * @return المحرف الموافق و يعيد القيمة "\0" في حال كانت النهاية هي نهاية
+     * البيانات
      */
     public static char EndToChar(EndType end) {
         switch (end) {
@@ -119,5 +109,14 @@ public enum EndType {
             default:
                 return '\0';
         }
+    }
+
+    /**
+     * معرفة إذا كانت النهاية المحددة هي نهاية جملة
+     * @param e النهاية
+     * @return true في حال كانت نهاية جملة , false خلاف ذلك
+     */
+    public static boolean isEndOfSenctence(EndType e) {
+        return e != Space;
     }
 }

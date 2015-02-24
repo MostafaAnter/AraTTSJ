@@ -5,180 +5,182 @@
  */
 package tts.core;
 
+import tts.core.phonemes.PhonemeGenerator;
+
 /**
  *
  *
  */
-public interface ArabicMoves {
+public abstract class ArabicMoves {
 
     /**
      * الفتحة
      */
-    char FATHAH = 'َ';
+    public static final char FATHAH = 'َ';
     /**
      * الضمة
      */
-    char DAMMAH = 'ُ';
+    public static final char DAMMAH = 'ُ';
     /**
      * الكسرة
      */
-    char KASRAH = 'ِ';
+    public static final char KASRAH = 'ِ';
     /**
      * تنوين الفتح
      */
-    char TANWEEN_FATEH = 'ً';
+    public static final char TANWEEN_FATEH = 'ً';
     /**
      * تنوين الكسر
      */
-    char TANWEEN_KASER = 'ٍ';
+    public static final char TANWEEN_KASER = 'ٍ';
     /**
      * تنوين الضم
      */
-    char TANWEEN_DAMM = 'ٌ';
+    public static final char TANWEEN_DAMM = 'ٌ';
     /**
      * ال التعريف
      */
-    String AL_TAAREEF = "ال";
+    public static final String AL_TAAREEF = "ال";
     /**
      * المدّة
      */
-    char MADDA = 'آ';
+    public static final char MADDA = 'آ';
     /**
      * الشدّة
      */
-    char SHADDA = 'ّ';
+    public static final char SHADDA = 'ّ';
 
     /**
      * الهمزة بأشكالها مالختلفة
      */
-    String HAMZAT = "أ|إ|ؤ|ئ";
+    public static final String HAMZAT = "أ|إ|ؤ|ئ";
 
     //  الأحرف
     /**
      * ء
      */
-    char HAMZA = 'ء';
+    public static final char HAMZA = 'ء';
     /**
      * ا
      */
-    char ALEF = 'ا';
+    public static final char ALEF = 'ا';
     /**
      * ى
      */
-    char ALEF_MAQSOORA = 'ى';
+    public static final char ALEF_MAQSOORA = 'ى';
     /**
      * ب
      */
-    char BAA = 'ب';
+    public static final char BAA = 'ب';
     /**
      * ت
      */
-    char TAA = 'ت';
+    public static final char TAA = 'ت';
     /**
      * ة
      */
-    char TAA_MARBOOTA = 'ة';
+    public static final char TAA_MARBOOTA = 'ة';
     /**
      * ث
      */
-    char THAA = 'ث';
+    public static final char THAA = 'ث';
     /**
      * ج
      */
-    char GEEM = 'ج';
+    public static final char GEEM = 'ج';
     /**
      * ح
      */
-    char HAAA = 'ح';
+    public static final char HAAA = 'ح';
     /**
      * خ
      */
-    char KHAA = 'خ';
+    public static final char KHAA = 'خ';
     /**
      * د
      */
-    char DAAL = 'د';
+    public static final char DAAL = 'د';
     /**
      * ذ
      */
-    char ZHAAL = 'ذ';
+    public static final char ZHAAL = 'ذ';
     /**
      * ر
      */
-    char RAA = 'ر';
+    public static final char RAA = 'ر';
     /**
      * ز
      */
-    char ZAI = 'ز';
+    public static final char ZAI = 'ز';
     /**
      * س
      */
-    char SEEN = 'س';
+    public static final char SEEN = 'س';
     /**
      * ش
      */
-    char SHEEN = 'ش';
+    public static final char SHEEN = 'ش';
     /**
      * ص
      */
-    char SAAD = 'ص';
+    public static final char SAAD = 'ص';
     /**
      * ض
      */
-    char DAAD = 'ض';
+    public static final char DAAD = 'ض';
     /**
      * ط
      */
 
-    char TAH = 'ط';
+    public static final char TAH = 'ط';
     /**
      * ظ
      */
-    char ZHAH = 'ظ';
+    public static final char ZHAH = 'ظ';
     /**
      * ع
      */
-    char AEEN = 'ع';
+    public static final char AEEN = 'ع';
     /**
      * غ
      */
-    char GAEEN = 'غ';
+    public static final char GAEEN = 'غ';
     /**
      * ف
      */
-    char FAA = 'ف';
+    public static final char FAA = 'ف';
     /**
      * ق
      */
-    char QAF = 'ق';
+    public static final char QAF = 'ق';
     /**
      * ك
      */
-    char KAF = 'ك';
+    public static final char KAF = 'ك';
     /**
      * ل
      */
-    char LAM = 'ل';
+    public static final char LAM = 'ل';
     /**
      * م
      */
-    char MEEM = 'م';
+    public static final char MEEM = 'م';
     /**
      * ن
      */
-    char NOON = 'ن';
+    public static final char NOON = 'ن';
     /**
      * ه
      */
-    char HAA = 'ه';
+    public static final char HAA = 'ه';
     /**
      * و
      */
-    char WOW = 'و';
+    public static final char WOW = 'و';
     /**
      * ي
      */
-    char YAA = 'ي';
+    public static final char YAA = 'ي';
 
     //علامات الترقيم
     /**
@@ -186,39 +188,83 @@ public interface ArabicMoves {
      *
      * .
      */
-    char DOT = '.';
+    public static final char DOT = '.';
 
     /**
      * الفاصلة
      */
-    char COMMA = '،';
+    public static final char COMMA = '،';
     /**
      * الفاصلة المنقوطة
      *
      * ؛
      *
      */
-    char SEMICOLON
+    public static final char SEMICOLON
             = '؛';
     /**
      * علامة الاستفهام
      *
      * ؟
      */
-    char QUESTION_MARK
+    public static final char QUESTION_MARK
             = '؟';
     /**
      * إشارة التعجب
      *
      * !
      */
-    char EXLAMATION_MARK
+    public static final char EXLAMATION_MARK
             = '!';
     /**
      * نقتطي القول
      *
      * :
      */
-    char SAY_DOTS
+    public static final char SAY_DOTS
             = ':';
+
+    /**
+     * هل الحركة ضمة
+     *
+     * @param Letter الحرف الذي نريد مقانته
+     * @return true في حال كان ضمة , false خلاف ذلك
+     */
+    public static boolean isDammah(char Letter) {
+        return (Letter == ArabicMoves.DAMMAH) || (Letter == PhonemeGenerator.getPhonemeDB().get(ArabicMoves.DAMMAH).getPhoneme().charAt(0));
+    }
+
+    /**
+     * هل الحركة فتحة
+     *
+     * @param Letter الحرف الذي نريد مقانته
+     * @return true في حال كان فتحة , false خلاف ذلك
+     */
+    public static boolean isFathah(char Letter) {
+        return (Letter == ArabicMoves.FATHAH) || (Letter == PhonemeGenerator.getPhonemeDB().get(ArabicMoves.FATHAH).getPhoneme().charAt(0));
+    }
+
+    /**
+     * هل الحركة كسرة
+     *
+     * @param Letter الحرف الذي نريد مقانته
+     * @return true في حال كان كسرة , false خلاف ذلك
+     */
+    public static boolean isKasrah(char Letter) {
+        return (Letter == ArabicMoves.KASRAH) || (Letter == PhonemeGenerator.getPhonemeDB().get(ArabicMoves.KASRAH).getPhoneme().charAt(0));
+    }
+
+    public static boolean isPunctuationMark(char letter) {
+        return (letter == ArabicMoves.QUESTION_MARK) || (letter == ArabicMoves.EXLAMATION_MARK) || (letter == ArabicMoves.DOT) || (letter == ArabicMoves.COMMA) || (letter == ArabicMoves.SAY_DOTS) || (letter == ArabicMoves.SEMICOLON);
+    }
+
+    /**
+     * هل الحرف حركة
+     *
+     * @param Letter الحرف الذي نريد مقانته
+     * @return true في حال كان حركة , false خلاف ذلك
+     */
+    public static boolean isMove(char Letter) {
+        return isFathah(Letter) || isDammah(Letter) || isKasrah(Letter);
+    }
 }
