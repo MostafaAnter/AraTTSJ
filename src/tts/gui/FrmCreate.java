@@ -131,19 +131,19 @@ public class FrmCreate extends javax.swing.JPanel {
 
             @Override
             public boolean accept(File f) {
-                return f.isDirectory() || f.getName().toLowerCase().endsWith(".wav");
+                return f.isDirectory() || f.getName().toLowerCase().endsWith(".pho");
             }
 
             @Override
             public String getDescription() {
-                return "WAV Audop files(*.wav)";
+                return "MBROLA Phoneme Files(*.pho)";
             }
         });
-        int res = choose.showOpenDialog(Mbrola_Select);
+        int res = choose.showSaveDialog(Mbrola_Select);
         if (res == JFileChooser.APPROVE_OPTION) {
             String path = choose.getSelectedFile().getAbsolutePath();
-            if (!path.endsWith(".wav")) {
-                path = path + ".wav";
+            if (!path.endsWith(".pho")) {
+                path = path + ".pho";
             }
             TxtPth.setText(path);
         }

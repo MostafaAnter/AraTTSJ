@@ -89,6 +89,19 @@ public class Settings {
         }
     }
 
+    public String getStats() {
+        return props.getProperty("stats", "");
+    }
+
+    public void setStats(String path) {
+        try {
+            props.setProperty("stats", path);
+            props.store(out, "");
+        } catch (IOException ex) {
+            Logger.getLogger(Settings.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+
     /**
      * تحميل الخط الخاص المستخدم للكتابة
      */

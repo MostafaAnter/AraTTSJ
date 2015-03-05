@@ -45,7 +45,7 @@ public enum EndType {
      */
     EndOfData("نهاية البيانات");
 
-    private String name;
+    private final String name;
 
     private EndType(String name) {
         this.name = name;

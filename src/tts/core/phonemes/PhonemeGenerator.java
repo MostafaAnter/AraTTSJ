@@ -6,15 +6,10 @@
 package tts.core.phonemes;
 
 import tts.core.phonemes.types.Phoneme;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Scanner;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import tts.core.ArabicMoves;
 import tts.core.phonemes.types.*;
 

@@ -15,7 +15,7 @@ import tts.core.*;
 import tts.core.phonemes.types.Word;
 
 public class FrmMain extends javax.swing.JFrame {
-
+    
     private final TTSEngine tts;
     private final Settings set = Settings.getSettings();
     private final FrmText txt = new FrmText();
@@ -27,14 +27,15 @@ public class FrmMain extends javax.swing.JFrame {
      * Creates new form FrmMain
      */
     public FrmMain() {
-
+        
         initComponents();
         vp.setVisible(false);
         crt.setVisible(false);
         Settings.setDirection(this, ComponentOrientation.RIGHT_TO_LEFT);
         tts = TTSEngine.getTTSEngine();
+        tts.loadStats(set.getStats());
         View.setViewportView(txt);
-
+        
     }
 
     /**
@@ -125,10 +126,10 @@ public class FrmMain extends javax.swing.JFrame {
                 View.setViewportView(crt);
                 break;
             }
-
+            
         }
     }//GEN-LAST:event_BtnNxtActionPerformed
-
+    
     private boolean processText() {
         String text = txt.getText();
         if (text == null || text.trim().equals("")) {
@@ -159,12 +160,12 @@ public class FrmMain extends javax.swing.JFrame {
                 View.setViewportView(vp);
                 index--;
                 break;
-
+            
         }
     }//GEN-LAST:event_BtnPrvActionPerformed
 
     private void BtnSetActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_BtnSetActionPerformed
-
+        
         new FrmStngs(this, true).setVisible(true);
     }//GEN-LAST:event_BtnSetActionPerformed
 

@@ -17,7 +17,8 @@ import java.util.Scanner;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import tts.core.expertsystem.ExpertOptimzer;
-import tts.core.phonemes.types.EndType;
+import tts.core.expertsystem.Statistic;
+import tts.core.listeners.TrainingListener;
 import tts.core.phonemes.types.Word;
 
 /**
@@ -43,6 +44,13 @@ public class TTSEngine {
         es = new ExpertOptimzer("time.fcl");
     }
 
+    public void loadStats(String file){
+        try {
+            Statistic.loadFromFile(file);
+        } catch (IOException ex) {
+            Logger.getLogger(TTSEngine.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
     //تم نقلها من الصف PhonemeGenerator من أجل النظام الخبير
     private void initializeTables() {
         try {
@@ -56,6 +64,8 @@ public class TTSEngine {
                 //تخزين الرموز في القاعدة
                 PhonemeGenerator.getPhonemeDB().put(data[0].charAt(0), new Phoneme(data[1], Integer.parseInt(data[2])));
                 ExpertOptimzer.getPhonemeInts().put(data[1], Integer.parseInt(data[3]));
+                if(data[1].equals("a"))
+                    ExpertOptimzer.getPhonemeInts().put(data[1]+".", Integer.parseInt(data[3]));
             }
         } catch (FileNotFoundException ex) {
             Logger.getLogger(PhonemeGenerator.class.getName()).log(Level.SEVERE, null, ex);
@@ -72,21 +82,12 @@ public class TTSEngine {
      */
     public Word[] convert(String text) {
         error = "";
+
         try {
             words = pre.preProcess(text);
             words = gen.generatePhoneme(words);
-            for (int i = 0; i < words.length; i++) {
-                for (Phoneme phoneme : words[i].getPhonemes()) {
-                    //هل الفونيم مقطع نظامي و ليس فراغ؟
-                    //هل الفونيم حرف ؟
-                    //هل هو حركة تنوب عن همزة ؟
-                    //هل هو فتحة تنوب عن ألف
-                    //في حال تححق أحد هذه الشروط مرره للنظام الخبير
-                    if (validPhoneme(phoneme, i)) {
-                        es.optimizeTime(phoneme);
-                    }
-                }
-            }
+
+              es.OptimizeList(words,false,0,0);
             return words;
         } catch (Exception e) {
             error = e.getMessage();
@@ -94,12 +95,18 @@ public class TTSEngine {
         return null;
     }
 
-    private boolean validPhoneme(Phoneme phoneme, int i) {
-        return !phoneme.getPhoneme().equals("_")
-                && (!ArabicMoves.isMove(phoneme.getPhoneme().charAt(0))
-                || (ArabicMoves.isMove(phoneme.getPhoneme().charAt(0))
-                && (i == 0 || (EndType.isEndOfSenctence(words[i-1].getEnd()))))
-                || (ArabicMoves.isFathah(phoneme.getPhoneme().charAt(0)) && phoneme.getTime() > 50));
+    /**
+     *
+     * @param TrainRounds
+     * @param initalValues
+     * @param TrainData
+     * @param listener
+     */
+    public void trainExpertSystem(int TrainRounds, double[][] initalValues, String TrainData,TrainingListener listener) {
+        Word[] wordsTrain = pre.preProcess(TrainData);
+        wordsTrain = gen.generatePhoneme(wordsTrain);
+
+        es.train(TrainRounds, initalValues[0], initalValues[1], initalValues[2], wordsTrain,listener);
     }
 
     /**
@@ -110,18 +117,13 @@ public class TTSEngine {
      *
      * @param MBROLA مسار برنامج MBROLA
      * @param PhonemeDB مسار قاعدة بيانات المقاطع الصوتية
-     * @param Target مسار حفظ الملف الصوتي
+     * @param Target مسار حفظ ملف PHO
      * @param Transcription إنشاء ملف مقاطع للاستخدام مع أداة MBROLIGN
      * @return true في حال كان التحويل ناجحاً, false إذا لم ينجح و لمعرفة تفاصيل
      * عدم النجاح استدعي التابع {@link TTSEngine#getError()}
      */
     public boolean createAudio(String MBROLA, String PhonemeDB, String Target, boolean Transcription) {
-        try {
-            //التحقق من وجود الملفات مسبقا و حذفها إذا كانت موجودة
-            File wav = new File(Target);
-            if (wav.exists()) {
-                wav.delete();
-            }
+        try {            
             File pho = createPho(Target);
             //إنشاء ملف المقاطع
             if (Transcription) {
