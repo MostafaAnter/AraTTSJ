@@ -133,7 +133,7 @@ public class TTSEngine {
             //و الانتظار حتى انتهاء التنفيذ
             Runtime rt = Runtime.getRuntime();
             rt.exec(new String[]{
-                MBROLA, PhonemeDB, pho.getAbsolutePath(), Target
+                MBROLA, PhonemeDB, Target
             }).waitFor();
             return true;
         } catch (IOException | InterruptedException e) {
@@ -143,7 +143,7 @@ public class TTSEngine {
     }
 
     private void createTranscription(String Target) throws FileNotFoundException {
-        File trans = new File(Target.replace(".wav", ".txt"));
+        File trans = new File(Target.replace(".pho", ".txt"));
         if (trans.exists()) {
             trans.delete();
 
@@ -161,7 +161,7 @@ public class TTSEngine {
     }
 
     private File createPho(String Target) throws FileNotFoundException {
-        File pho = new File(Target.replace(".wav", ".pho"));
+        File pho = new File(Target);
         if (pho.exists()) {
             pho.delete();
 
